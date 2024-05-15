@@ -1,11 +1,12 @@
 #include <iostream>
-#include <Element.hpp>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
+#include "Element.hpp"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
+#include "SDL2/SDL_image.h"
+
 using namespace std;
 
-const int WIDTH = 800, HEIGHT = 600;
+const int WIDTH = 1000, HEIGHT = 600;
 const int ROWS = 6, COLS = 6;
 SDL_Renderer *renderer;
 TTF_Font *font;
@@ -16,7 +17,7 @@ void drawBackground()
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/background.jpg");
     if (!backgroundSurface)
     {
-        std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load background image: " << IMG_GetError() << endl;
         return;
     }
 
@@ -24,7 +25,7 @@ void drawBackground()
     SDL_FreeSurface(backgroundSurface);
     if (!backgroundTexture)
     {
-        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create background texture: " << SDL_GetError() << endl;
         return;
     }
 
@@ -33,13 +34,14 @@ void drawBackground()
     SDL_DestroyTexture(backgroundTexture);
 }
 
+
 void drawTitle()
 {
     // Render text
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", COLOR_BLACK);
     if (!textSurface)
     {
-        std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
+        cerr << "Failed to render text: " << TTF_GetError() << endl;
         return;
     }
 
@@ -111,6 +113,7 @@ int main(int argc, char *argv[])
             }
         }
     }
+    
 
     // Free resources
     SDL_DestroyRenderer(renderer);
