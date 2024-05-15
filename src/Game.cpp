@@ -1,7 +1,9 @@
 // Game.cpp
 #include "Game.hpp"
-Game::Game(SDL_Renderer *_renderer, TTF_Font *_font) : renderer(_renderer), font(_font)
+Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
+    : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
 {
+
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/background.jpg");
     if (!backgroundSurface)
     {
@@ -37,7 +39,7 @@ void Game::drawBackground()
 
 void Game::drawTitle()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", {0, 0, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", {150, 27, 0, 255});
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -54,8 +56,7 @@ void Game::drawTitle()
 
     int textWidth, textHeight;
     TTF_SizeText(font, "Jeu du parking", &textWidth, &textHeight);
-
-    SDL_Rect textRect = {400 - textWidth / 2, 40, textWidth, textHeight}; // Adjusted for a 800x600 window
+    SDL_Rect textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight}; // Adjusted for a 800x600 window
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
 
     SDL_DestroyTexture(textTexture);
