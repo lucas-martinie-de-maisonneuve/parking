@@ -1,129 +1,60 @@
-#include <iostream>
-#include "Element.hpp"
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
-#include "SDL2/SDL_image.h"
-
-using namespace std;
-
-const int WIDTH = 1000, HEIGHT = 800;
-const int ROWS = 8, COLS = 8;
-SDL_Renderer *renderer;
-TTF_Font *font;
-
-void drawBackground()
-{
-    // Load background
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background.jpg");
-    if (!backgroundSurface)
-    {
-        cerr << "Failed to load background image: " << IMG_GetError() << endl;
-        return;
-    }
-
-    SDL_Texture *backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-    SDL_FreeSurface(backgroundSurface);
-    if (!backgroundTexture)
-    {
-        cerr << "Failed to create background texture: " << SDL_GetError() << endl;
-        return;
-    }
-
-    // Display Background
-    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
-    SDL_DestroyTexture(backgroundTexture);
-}
-
-
-
-void drawTitle()
-{
-    // Render text
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", COLOR_BLACK);
-    if (!textSurface)
-    {
-        cerr << "Failed to render text: " << TTF_GetError() << endl;
-        return;
-    }
-
-    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_FreeSurface(textSurface);
-
-    int textWidth, textHeight;
-    TTF_SizeText(font, "Jeu du parking", &textWidth, &textHeight);
-
-    SDL_Rect textRect = {WIDTH / 2 - textWidth / 2, 40, textWidth, textHeight};
-    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-    SDL_DestroyTexture(textTexture);
-}
-
-void drawCheckerboard()
-{
-    int squareSize = 70;
-
-    for (int i = 0; i < ROWS; ++i)
-    {
-        for (int j = 0; j < COLS; ++j)
-        {
-            SDL_Rect rect = {j * squareSize + (WIDTH - COLS * squareSize) / 2 + j,
-                             i * squareSize + (HEIGHT - ROWS * squareSize) / 2 + i,
-                             squareSize,
-                             squareSize};
-
-            SDL_SetRenderDrawColor(renderer, COLOR_WHITE.r, COLOR_WHITE.g, COLOR_WHITE.b, 255);
-            SDL_RenderFillRect(renderer, &rect);
-        }
-    }
-
-    SDL_RenderPresent(renderer);
-}
-
-
-
+#include "Game.hpp"
+#include "Window.hpp"
+int screenWidth = 1000; // Global variable
+int screenHeight = 750; // Global variable
 
 int main(int argc, char *argv[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    SDL_Window *window = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-    if (TTF_Init() != 0)
+    // Create window
+    Window window(screenWidth, screenHeight);
+    if (!window.isInitialized())
     {
-        cout << "Error initializing SDL_ttf: " << TTF_GetError() << endl;
-        return 1;
+        std::cerr << "Failed to initialize the window." << std::endl;
+        return -1;
     }
 
-    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 40);
+    // Get renderer
+    SDL_Renderer *renderer = window.getRenderer();
+
+    // Load font
+    TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
     if (!font)
     {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-        return 1;
+        return -1;
     }
 
-    drawBackground();
-    drawTitle();
-    drawCheckerboard();
+    // Create game instance
+    Game game(renderer, font, screenWidth, screenHeight); // screenWidth and screenHeight as parameters
 
-    SDL_Event windowEvent;
+    // Main game loop
     bool running = true;
+    SDL_Event event;
     while (running)
     {
-        while (SDL_PollEvent(&windowEvent))
+        // Handle events
+        while (SDL_PollEvent(&event))
         {
-            if (SDL_QUIT == windowEvent.type)
+            if (event.type == SDL_QUIT)
             {
                 running = false;
             }
         }
-    }
-    
 
-    // Free resources
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        // window.update();
+        game.run();
+
+        SDL_RenderPresent(renderer);
+
+        // Delay for stable frame rate
+        SDL_Delay(16); // Adjust this value for desired frame rate
+    }
+
+    // Cleanup resources
     TTF_CloseFont(font);
-    TTF_Quit();
-    SDL_Quit();
+
     return 0;
 }
