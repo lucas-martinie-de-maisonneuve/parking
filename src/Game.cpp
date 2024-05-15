@@ -6,8 +6,8 @@
 
 using namespace std;
 
-const int WIDTH = 1000, HEIGHT = 600;
-const int ROWS = 6, COLS = 6;
+const int WIDTH = 1000, HEIGHT = 800;
+const int ROWS = 8, COLS = 8;
 SDL_Renderer *renderer;
 TTF_Font *font;
 
@@ -33,6 +33,7 @@ void drawBackground()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_DestroyTexture(backgroundTexture);
 }
+
 
 
 void drawTitle()
@@ -76,6 +77,9 @@ void drawCheckerboard()
 
     SDL_RenderPresent(renderer);
 }
+
+
+
 
 int main(int argc, char *argv[])
 {
