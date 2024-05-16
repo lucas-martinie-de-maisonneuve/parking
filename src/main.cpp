@@ -1,5 +1,8 @@
+// Load files
 #include "Game.hpp"
 #include "Window.hpp"
+#include "Element.hpp"
+
 int screenWidth = 1000; // Global variable
 int screenHeight = 750; // Global variable
 
@@ -45,10 +48,12 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
 
         // window.update();
-        game.run();
+        // game.run();
+
+        displayBackground(renderer, surfaceBackground, textureBackground, "assets/img/background.jpg");
+
 
         SDL_RenderPresent(renderer);
-
         // Delay for stable frame rate
         SDL_Delay(16); // Adjust this value for desired frame rate
     }

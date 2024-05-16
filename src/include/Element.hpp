@@ -20,45 +20,38 @@ const SDL_Color COLOR_BLUE = {50, 100, 150, 255};
 //***** IMAGES
 
 // Game
-SDL_Surface* backgroundSurface;
+SDL_Surface* surfaceBackground;
 
 //***** TEXTURE
 
 // Game
-SDL_Texture* backgroundTexture;
-SDL_Texture* textureBoat;
-SDL_Texture* textureBoat1;
+SDL_Texture* textureBackground;
+
 
 //***** METHODES
 
 void unloadImgGame() {
-    SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(textureBoat);
+    SDL_DestroyTexture(textureBackground);
+
 }
 
 
 // Display background
-void displayBackground(SDL_Surface*& surface, SDL_Texture *surfaceTexture, const char* path) {
-       surface = IMG_Load(path);
-    if (!surface)    {
+void displayBackground(SDL_Renderer *renderer, SDL_Surface *&surface, SDL_Texture *surfaceTexture, const char *path)
+{
+    surface = IMG_Load(path);
+    if (!surface)
+    {
         cerr << "Failed to load image: " << surface << IMG_GetError() << endl;
-        return;
     }
-    else if (!path){
-        cerr << "Failed path: " << path << IMG_GetError() << endl;
-        return;
-    }
-
-    surfaceTexture = SDL_CreateTextureFromSurface(renderer,surface);
+    surfaceTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     if (!surfaceTexture)
     {
         cerr << "Failed to create texture for background " << surfaceTexture << SDL_GetError() << endl;
-        return;
     }
 
     SDL_RenderCopy(renderer, surfaceTexture, nullptr, nullptr);
-
 }
 
 
