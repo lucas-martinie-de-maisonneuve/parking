@@ -9,25 +9,29 @@
 class Game
 {
 public:
-    Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight);
+    Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
     ~Game();
-    void run();
-    int handleButtonClick(int x, int y); 
+    void displayGame();
+    int mousePositionGame(int x, int y); 
 
 private:
     SDL_Renderer *renderer;
     TTF_Font *font;
+    TTF_Font *font2;
     int screenWidth;
     int screenHeight;
 
     SDL_Texture *backgroundTexture;
     SDL_Texture *buttonTexture;
+    SDL_Texture *textTexture;
     SDL_Rect buttonRect;
+    SDL_Rect textRect;
 
     void drawBackground();
     void drawTitle();
     void drawCheckerboard();
     void drawButton();
+
 };
 
 #endif

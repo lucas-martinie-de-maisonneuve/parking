@@ -10,13 +10,14 @@
 class Menu
 {
 public:
-    Menu(SDL_Renderer *renderer, TTF_Font *font, int screenWidth, int screenHeight);
+    Menu(SDL_Renderer *renderer,  int screenWidth, int screenHeight);
     ~Menu();
     void run();
 
 private:
     SDL_Renderer *renderer;
     TTF_Font *font;
+    TTF_Font *font2;
     SDL_Texture *backgroundTexture;
 
     void drawBackground();

@@ -18,17 +18,11 @@ int main(int argc, char *argv[])
     // Get renderer
     SDL_Renderer *renderer = window.getRenderer();
 
-    // Load font
-    TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
-    if (!font)
-    {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-        return -1;
-    }
 
     // Create game instance
-    Game game(renderer, font, screenWidth, screenHeight);
-    Menu menu(renderer, font, screenWidth, screenHeight);
+    Game game(renderer, screenWidth, screenHeight);
+
+    Menu menu(renderer, screenWidth, screenHeight);
 
     // Main game loop
     bool running = true;
@@ -46,7 +40,7 @@ int main(int argc, char *argv[])
             {
                 int x, y;
                 SDL_GetMouseState(&x, &y);
-                if (game.handleButtonClick(x, y))
+                if (game.mousePositionGame(x, y))
                 {
                     pageState = 10;
                 }
@@ -56,7 +50,7 @@ int main(int argc, char *argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         if (pageState == 0)
-            game.run();
+            game.displayGame();
         else if (pageState == 10)
             menu.run();
 
@@ -66,7 +60,6 @@ int main(int argc, char *argv[])
     }
 
     // Cleanup resources
-    TTF_CloseFont(font);
 
     return 0;
 }

@@ -33,8 +33,6 @@ void unloadImgGame() {
     SDL_DestroyTexture(textureBackground);
 
 }
-
-
 // BACKGROUND
 // textureBackground = loadBackground(renderer,surfaceBackground,"assets/img/background1.jpg");
 // renderBackground(renderer, textureBackground);

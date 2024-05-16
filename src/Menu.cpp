@@ -1,11 +1,32 @@
 // Menu.cpp
 #include "menu.hpp"
 
-
-
-Menu::Menu(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
-    : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
+Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
+    : renderer(_renderer), font(nullptr), font2(nullptr), screenWidth(screenWidth), screenHeight(screenHeight)
 {
+    // if (TTF_Init() == -1)
+    // {
+    //     std::cerr << "SDL TTF initialization failed: " << TTF_GetError() << std::endl;
+    // }
+
+    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    if (!font)
+    {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+    }
+
+    font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
+    if (!font2)
+    {
+        std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+    }
+
+    TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    TTF_Font *font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
+    if (!font2)
+    {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+    }
 
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.jpg");
     if (!backgroundSurface)
@@ -24,6 +45,7 @@ Menu::Menu(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screen
 Menu::~Menu()
 {
     SDL_DestroyTexture(backgroundTexture);
+    TTF_CloseFont(font);
 }
 
 void Menu::run()
@@ -45,7 +67,6 @@ void Menu::drawTitle()
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
-       
     }
 
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -53,7 +74,6 @@ void Menu::drawTitle()
     if (!textTexture)
     {
         std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-
     }
 
     int textWidth, textHeight;
@@ -62,4 +82,3 @@ void Menu::drawTitle()
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_DestroyTexture(textTexture);
 }
-

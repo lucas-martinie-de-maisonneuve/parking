@@ -1,8 +1,50 @@
 #include "Game.hpp"
+#include <iostream>
 
-Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
-    : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
+Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
+    : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
+      font(nullptr), font2(nullptr), textTexture(nullptr)
 {
+    // Initialize SDL TTF
+    // if (TTF_Init() == -1)
+    // {
+    //     std::cerr << "SDL TTF initialization failed: " << TTF_GetError() << std::endl;
+    //     // Handle initialization failure
+    // }
+
+    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    if (!font)
+    {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+    }
+
+    font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
+    if (!font2)
+    {
+        std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+    }
+
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {150, 27, 0, 255});
+    if (!textSurface)
+    {
+        std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
+        // Handle text rendering failure
+    }
+
+    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_FreeSurface(textSurface);
+    if (!textTexture)
+    {
+        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        // Handle text texture creation failure
+    }
+
+    int textWidth, textHeight;
+    TTF_SizeText(font2, "Jeu du parking", &textWidth, &textHeight);
+    textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
+
+    
+    // Load background image
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/background1.png");
     if (!backgroundSurface)
     {
@@ -30,7 +72,6 @@ Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screen
         std::cerr << "Failed to create button texture: " << SDL_GetError() << std::endl;
     }
 
-    // Set button position and size
     buttonRect = {screenWidth - 60, 25, 60, 20};
 }
 
@@ -38,42 +79,19 @@ Game::~Game()
 {
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(font);
+    TTF_CloseFont(font2);
+    TTF_Quit();
+    IMG_Quit();
 }
 
-void Game::run()
-{
-    drawBackground();
-    drawTitle();
-    drawCheckerboard();
-    drawButton();
-}
-
-void Game::drawBackground()
+void Game::displayGame()
 {
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
-}
-
-void Game::drawTitle()
-{
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", {150, 27, 0, 255});
-    if (!textSurface)
-    {
-        std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
-    }
-
-    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_FreeSurface(textSurface);
-    if (!textTexture)
-    {
-        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-    }
-
-    int textWidth, textHeight;
-    TTF_SizeText(font, "Jeu du parking", &textWidth, &textHeight);
-    SDL_Rect textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight}; // Adjusted for a 800x600 window
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-
-    SDL_DestroyTexture(textTexture);
+    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+    drawCheckerboard();
 }
 
 void Game::drawCheckerboard()
@@ -96,12 +114,7 @@ void Game::drawCheckerboard()
     }
 }
 
-void Game::drawButton()
-{
-    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-}
-
-int Game::handleButtonClick(int x, int y)
+int Game::mousePositionGame(int x, int y)
 {
     if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
         y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
