@@ -12,20 +12,29 @@ class Game
 public:
     Game(SDL_Renderer *renderer, int screenWidth, int screenHeight);
     ~Game();
-    void run();
+    void runGame();
+    void loadMenuItems();
 
 private:
     SDL_Renderer *renderer;
-    
+
+    // Font
     TTF_Font *font1;
     TTF_Font *font2;
-    SDL_Texture *backgroundTexture;
 
+    // Texture
+    SDL_Texture *backgroundTexture;
+    SDL_Texture *textTitleGame;
+
+    // Rect
+    SDL_Rect textRect;
+
+    void loadTitleGame();
     void drawBackground();
-    void drawTitle();
     void drawCheckerboard();
     int screenWidth;
     int screenHeight;
+
 };
 
 #endif // GAME_HPP

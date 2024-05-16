@@ -10,7 +10,7 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     font1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 35);
     if (!font1)
     {
-        cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
     }
 
     font2 = TTF_OpenFont("assets/fonts/Motley Forces.ttf", 50);

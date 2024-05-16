@@ -1,85 +1,89 @@
 // Game.cpp
 
+using namespace std;
+
 #include "Game.hpp"
+
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), font1(nullptr), font2(nullptr), screenWidth(screenWidth), screenHeight(screenHeight)
 {
 
     // Load font
-    TTF_Font *font1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
-    TTF_Font *font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
-
+    font1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
     if (!font1)
     {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-    
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
     }
 
+    font2 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 50);
        if (!font2)
     {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-      
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
     }
 
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background.jpg");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundGame.jpeg");
     if (!backgroundSurface)
     {
-        std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load background image: " << IMG_GetError() << endl;
     }
 
     backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
     SDL_FreeSurface(backgroundSurface);
     if (!backgroundTexture)
     {
-        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create background texture: " << SDL_GetError() << endl;
     }
 }
 
 Game::~Game()
 {
-    SDL_DestroyTexture(backgroundTexture);
+    // Font
     TTF_CloseFont(font1);
-    TTF_CloseFont(font2);    
+    TTF_CloseFont(font2);   
+
+    // Texture
+    SDL_DestroyTexture(backgroundTexture);
+    SDL_DestroyTexture(textTitleGame);
+ 
 }
 
-void Game::run()
+void Game::runGame()
 {
-    drawBackground();
-    drawTitle();
-    drawCheckerboard();
-
-    // Placeholder for additional game logic
-}
-
-void Game::drawBackground()
-{
+    // Background
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
+    
+    // Title
+    SDL_RenderCopy(renderer, textTitleGame, nullptr, &textRect);
+
+    // Functions Game
+    loadTitleGame();
+    drawCheckerboard();
 }
 
-void Game::drawTitle()
+
+void Game:: loadMenuItems(){
+    loadTitleGame();
+}
+
+void Game::loadTitleGame()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {150, 27, 0, 255});
-    if (!textSurface)
+    SDL_Surface *surfaceTitleGame = TTF_RenderText_Solid(font2, "Jeu du parking", {255, 225, 255, 255});
+    if (!surfaceTitleGame )
     {
-        std::cerr << "Failed to render text G: " << TTF_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
+        cerr << "Failed to render text G: " << TTF_GetError() << endl;
     }
 
-    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_FreeSurface(textSurface);
-    if (!textTexture)
+    textTitleGame = SDL_CreateTextureFromSurface(renderer, surfaceTitleGame );
+    SDL_FreeSurface(surfaceTitleGame);
+    if (!textTitleGame)
     {
-        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
+        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
     }
 
     int textWidth, textHeight;
     TTF_SizeText(font2, "Jeu du parking", &textWidth, &textHeight);
-    SDL_Rect textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight}; // Adjusted for a 800x600 window
-    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-
-    SDL_DestroyTexture(textTexture);
+    textRect = {screenWidth / 2 - textWidth / 2, 20, textWidth, textHeight}; 
 }
 
 void Game::drawCheckerboard()

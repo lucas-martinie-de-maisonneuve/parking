@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
 
         // window.update();
-        game.run();
+        game.runGame();
         // menu.runMenu();
 
         SDL_RenderPresent(renderer);
