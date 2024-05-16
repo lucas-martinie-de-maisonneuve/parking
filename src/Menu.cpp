@@ -7,21 +7,22 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), font1(nullptr), font2(nullptr), screenWidth(screenWidth), screenHeight(screenHeight)
 {
 
-    font1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    font1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 35);
     if (!font1)
     {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font: " << TTF_GetError() << std::endl;
     }
 
-    font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
+    font2 = TTF_OpenFont("assets/fonts/Motley Forces.ttf", 50);
     if (!font2)
     {
-        std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
     
  // Load font
-    TTF_Font *font1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
-    TTF_Font *font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
+    TTF_Font *font1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 24);
+    TTF_Font *font2 = TTF_OpenFont("assets/fonts/Motley Forces.ttf", 50);
+
 
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.png");
     if (!backgroundSurface)
@@ -61,7 +62,7 @@ void Menu::drawBackground()
 
 void Menu::drawTitle()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Boat Parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Boat Parking", {255, 255, 255, 255});
     if (!textSurface)
     {
         cerr << "Failed to render text m: " << TTF_GetError() << endl;
