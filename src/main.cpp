@@ -24,6 +24,9 @@ int main(int argc, char *argv[])
     Game game(renderer, screenWidth, screenHeight);
     Menu menu(renderer, screenWidth, screenHeight);
 
+    // Menu
+    menu.loadMenuItems();
+
     // Main game loop
     bool running = true;
     SDL_Event event;
@@ -42,12 +45,12 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
 
         // window.update();
-        // game.run();
-        menu.run();
+        game.run();
+        // menu.runMenu();
 
         SDL_RenderPresent(renderer);
-        // Delay for stable frame rate
-        SDL_Delay(16); // Adjust this value for desired frame rate
+        SDL_Delay(16); 
+
     }
 
     return 0;

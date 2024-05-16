@@ -16,8 +16,9 @@ public:
 
 private:
     SDL_Renderer *renderer;
+    
     TTF_Font *font1;
-     TTF_Font *font2;
+    TTF_Font *font2;
     SDL_Texture *backgroundTexture;
 
     void drawBackground();
