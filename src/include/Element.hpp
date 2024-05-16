@@ -22,20 +22,15 @@ const SDL_Color COLOR_BLUE = {50, 100, 150, 255};
 // Game
 SDL_Surface* surfaceBackground;
 
-
 //***** TEXTURE
 
 // Game
 SDL_Texture* textureBackground;
-SDL_Texture* textureBoat;
-
-
 
 //***** METHODES
 
 void unloadImgGame() {
     SDL_DestroyTexture(textureBackground);
-     SDL_DestroyTexture(textureBoat);
 
 }
 

@@ -1,13 +1,13 @@
 // Menu.cpp
-
 #include "menu.hpp"
+
 
 
 Menu::Menu(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
     : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
 {
 
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background1.png");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.jpg");
     if (!backgroundSurface)
     {
         std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
@@ -30,7 +30,6 @@ void Menu::run()
 {
     drawBackground();
     drawTitle();
-    drawCheckerboard();
 
     // Placeholder for additional Menu logic
 }
@@ -42,11 +41,11 @@ void Menu::drawBackground()
 
 void Menu::drawTitle()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Jeu du parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, "Boat Parking", {150, 27, 0, 255});
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
+       
     }
 
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -54,33 +53,13 @@ void Menu::drawTitle()
     if (!textTexture)
     {
         std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
+
     }
 
     int textWidth, textHeight;
-    TTF_SizeText(font, "Jeu du parking", &textWidth, &textHeight);
-    SDL_Rect textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight}; // Adjusted for a 800x600 window
+    TTF_SizeText(font, "Boat parking", &textWidth, &textHeight);
+    SDL_Rect textRect = {screenWidth / 2 - textWidth / 2, 25, textWidth, textHeight};
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-
     SDL_DestroyTexture(textTexture);
 }
 
-void Menu::drawCheckerboard()
-{
-    const int ROWS = 8, COLS = 8;
-    int squareSize = 70;
-
-    for (int i = 0; i < ROWS; ++i)
-    {
-        for (int j = 0; j < COLS; ++j)
-        {
-            SDL_Rect rect = {j * squareSize + (1000 - COLS * squareSize) / 2 + j,
-                             i * squareSize + (750 - ROWS * squareSize) / 2 + i,
-                             squareSize,
-                             squareSize};
-
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderFillRect(renderer, &rect);
-        }
-    }
-}

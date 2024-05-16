@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 
     // Load font
     TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
+
+
     if (!font)
     {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
@@ -30,7 +32,7 @@ int main(int argc, char *argv[])
 
     // Create game instance
     Game game(renderer, font, screenWidth, screenHeight);
-    Menu menu(renderer, font, screenWidth, screenHeight);  
+    Menu menu(renderer, font, screenWidth, screenHeight);
 
     // Main game loop
     bool running = true;
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
 
         // window.update();
         // game.run();
-        // menu.run();
+        menu.run();
 
         SDL_RenderPresent(renderer);
         // Delay for stable frame rate
