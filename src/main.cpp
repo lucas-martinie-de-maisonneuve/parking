@@ -52,6 +52,8 @@ int main(int argc, char *argv[])
 
         displayBackground(renderer, surfaceBackground, textureBackground, "assets/img/background.jpg");
 
+ 
+
 
         SDL_RenderPresent(renderer);
         // Delay for stable frame rate

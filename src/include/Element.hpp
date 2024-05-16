@@ -22,21 +22,27 @@ const SDL_Color COLOR_BLUE = {50, 100, 150, 255};
 // Game
 SDL_Surface* surfaceBackground;
 
+
 //***** TEXTURE
 
 // Game
 SDL_Texture* textureBackground;
+SDL_Texture* textureBoat;
+
 
 
 //***** METHODES
 
 void unloadImgGame() {
     SDL_DestroyTexture(textureBackground);
+     SDL_DestroyTexture(textureBoat);
 
 }
 
 
-// Display background
+// BACKGROUND
+// displayBackground(renderer, surfaceBackground, textureBackground, "assets/img/background.jpg");
+
 void displayBackground(SDL_Renderer *renderer, SDL_Surface *&surface, SDL_Texture *surfaceTexture, const char *path)
 {
     surface = IMG_Load(path);
@@ -55,8 +61,12 @@ void displayBackground(SDL_Renderer *renderer, SDL_Surface *&surface, SDL_Textur
 }
 
 
-// Display Image
-SDL_Texture* loadTexture(const std::string& imagePath, SDL_Renderer* renderer) {
+
+//*** IMAGE
+// textureBoat = loadTexture(renderer,"assets/img/back.png");
+// renderTexture(renderer, textureBoat, 100, 100, 500, 500);
+
+SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& imagePath) {
 
     // Load image
     SDL_Surface* surface = IMG_Load(imagePath.c_str());
@@ -77,7 +87,7 @@ SDL_Texture* loadTexture(const std::string& imagePath, SDL_Renderer* renderer) {
 }
 
 // Function to render an image
-void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int width, int height) {
+void renderTexture( SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, int width, int height) {
     SDL_Rect destRect = { x, y, width, height };
     SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 }
