@@ -41,25 +41,31 @@ void unloadImgGame() {
 
 
 // BACKGROUND
-// displayBackground(renderer, surfaceBackground, textureBackground, "assets/img/background.jpg");
+// textureBackground = loadBackground(renderer,surfaceBackground,"assets/img/background1.jpg");
+// renderBackground(renderer, textureBackground);
 
-void displayBackground(SDL_Renderer *renderer, SDL_Surface *&surface, SDL_Texture *surfaceTexture, const char *path)
+SDL_Texture* loadBackground(SDL_Renderer *renderer, SDL_Surface *&surface, const char *path)
 {
     surface = IMG_Load(path);
     if (!surface)
     {
         cerr << "Failed to load image: " << surface << IMG_GetError() << endl;
     }
-    surfaceTexture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_Texture *surfaceTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     if (!surfaceTexture)
     {
         cerr << "Failed to create texture for background " << surfaceTexture << SDL_GetError() << endl;
     }
 
-    SDL_RenderCopy(renderer, surfaceTexture, nullptr, nullptr);
+   return surfaceTexture;
 }
 
+void renderBackground(SDL_Renderer* renderer, SDL_Texture* surfaceTexture){
+
+    SDL_RenderCopy(renderer, surfaceTexture, nullptr, nullptr);
+}
 
 
 //*** IMAGE

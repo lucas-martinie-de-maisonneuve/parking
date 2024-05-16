@@ -1,5 +1,8 @@
 // Game.cpp
+
 #include "Game.hpp"
+
+
 Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
     : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
 {

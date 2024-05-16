@@ -1,7 +1,8 @@
 // Load files
-#include "Game.hpp"
 #include "Window.hpp"
 #include "Element.hpp"
+#include "Game.hpp"
+#include "Menu.hpp"
 
 int screenWidth = 1000; // Global variable
 int screenHeight = 750; // Global variable
@@ -28,7 +29,8 @@ int main(int argc, char *argv[])
     }
 
     // Create game instance
-    Game game(renderer, font, screenWidth, screenHeight); // screenWidth and screenHeight as parameters
+    Game game(renderer, font, screenWidth, screenHeight);
+    Menu menu(renderer, font, screenWidth, screenHeight);  
 
     // Main game loop
     bool running = true;
@@ -49,11 +51,7 @@ int main(int argc, char *argv[])
 
         // window.update();
         // game.run();
-
-        displayBackground(renderer, surfaceBackground, textureBackground, "assets/img/background.jpg");
-
- 
-
+        // menu.run();
 
         SDL_RenderPresent(renderer);
         // Delay for stable frame rate
