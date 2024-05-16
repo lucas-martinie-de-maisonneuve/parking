@@ -1,13 +1,9 @@
-// Game.cpp
-
 #include "Game.hpp"
-
 
 Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screenHeight)
     : renderer(_renderer), font(_font), screenWidth(screenWidth), screenHeight(screenHeight)
 {
-
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background.jpg");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background1.png");
     if (!backgroundSurface)
     {
         std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
@@ -19,11 +15,29 @@ Game::Game(SDL_Renderer *_renderer, TTF_Font *_font, int screenWidth, int screen
     {
         std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
     }
+
+    // Load button image
+    SDL_Surface *buttonSurface = IMG_Load("assets/img/buttonmenu.png");
+    if (!buttonSurface)
+    {
+        std::cerr << "Failed to load button image: " << IMG_GetError() << std::endl;
+    }
+
+    buttonTexture = SDL_CreateTextureFromSurface(renderer, buttonSurface);
+    SDL_FreeSurface(buttonSurface);
+    if (!buttonTexture)
+    {
+        std::cerr << "Failed to create button texture: " << SDL_GetError() << std::endl;
+    }
+
+    // Set button position and size
+    buttonRect = {screenWidth - 60, 25, 60, 20};
 }
 
 Game::~Game()
 {
     SDL_DestroyTexture(backgroundTexture);
+    SDL_DestroyTexture(buttonTexture);
 }
 
 void Game::run()
@@ -31,8 +45,7 @@ void Game::run()
     drawBackground();
     drawTitle();
     drawCheckerboard();
-
-    // Placeholder for additional game logic
+    drawButton();
 }
 
 void Game::drawBackground()
@@ -46,7 +59,6 @@ void Game::drawTitle()
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
     }
 
     SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -54,7 +66,6 @@ void Game::drawTitle()
     if (!textTexture)
     {
         std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-        // Proper error handling needed, maybe throw an exception
     }
 
     int textWidth, textHeight;
@@ -68,19 +79,34 @@ void Game::drawTitle()
 void Game::drawCheckerboard()
 {
     const int ROWS = 8, COLS = 8;
-    int squareSize = 70;
+    int squareSize = 50;
 
     for (int i = 0; i < ROWS; ++i)
     {
         for (int j = 0; j < COLS; ++j)
         {
-            SDL_Rect rect = {j * squareSize + (1000 - COLS * squareSize) / 2 + j,
-                             i * squareSize + (750 - ROWS * squareSize) / 2 + i,
+            SDL_Rect rect = {j * squareSize + (screenWidth - COLS * squareSize) / 2 + j,
+                             i * squareSize + (screenHeight - ROWS * squareSize) / 2 + i,
                              squareSize,
                              squareSize};
-
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 185);
             SDL_RenderFillRect(renderer, &rect);
         }
     }
+}
+
+void Game::drawButton()
+{
+    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+}
+
+int Game::handleButtonClick(int x, int y)
+{
+    if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
+        y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
+    {
+        return 10;
+    }
+    return 0;
 }

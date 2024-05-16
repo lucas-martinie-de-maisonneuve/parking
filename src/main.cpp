@@ -1,11 +1,9 @@
-// Load files
 #include "Window.hpp"
-#include "Element.hpp"
 #include "Game.hpp"
 #include "Menu.hpp"
-
-int screenWidth = 1000; // Global variable
-int screenHeight = 750; // Global variable
+int pageState = 0;
+int screenWidth = 585;
+int screenHeight = 750;
 
 int main(int argc, char *argv[])
 {
@@ -22,8 +20,6 @@ int main(int argc, char *argv[])
 
     // Load font
     TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
-
-
     if (!font)
     {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
@@ -46,18 +42,27 @@ int main(int argc, char *argv[])
             {
                 running = false;
             }
+            else if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int x, y;
+                SDL_GetMouseState(&x, &y);
+                if (game.handleButtonClick(x, y))
+                {
+                    pageState = 10;
+                }
+            }
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-
-        // window.update();
-        // game.run();
-        menu.run();
+        if (pageState == 0)
+            game.run();
+        else if (pageState == 10)
+            menu.run();
 
         SDL_RenderPresent(renderer);
-        // Delay for stable frame rate
-        SDL_Delay(16); // Adjust this value for desired frame rate
+
+        SDL_Delay(16);
     }
 
     // Cleanup resources
