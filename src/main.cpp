@@ -4,7 +4,7 @@
 #include "Game.hpp"
 #include "Menu.hpp"
 
-int screenWidth = 1000; // Global variable
+int screenWidth = 600; // Global variable
 int screenHeight = 750; // Global variable
 
 int main(int argc, char *argv[])
@@ -20,19 +20,9 @@ int main(int argc, char *argv[])
     // Get renderer
     SDL_Renderer *renderer = window.getRenderer();
 
-    // Load font
-    TTF_Font *font = TTF_OpenFont("assets/fonts/Coffee.ttf", 24);
-
-
-    if (!font)
-    {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-        return -1;
-    }
-
     // Create game instance
-    Game game(renderer, font, screenWidth, screenHeight);
-    Menu menu(renderer, font, screenWidth, screenHeight);
+    Game game(renderer, screenWidth, screenHeight);
+    Menu menu(renderer, screenWidth, screenHeight);
 
     // Main game loop
     bool running = true;
@@ -59,9 +49,6 @@ int main(int argc, char *argv[])
         // Delay for stable frame rate
         SDL_Delay(16); // Adjust this value for desired frame rate
     }
-
-    // Cleanup resources
-    TTF_CloseFont(font);
 
     return 0;
 }

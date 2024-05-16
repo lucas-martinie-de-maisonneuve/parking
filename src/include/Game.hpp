@@ -10,13 +10,14 @@
 class Game
 {
 public:
-    Game(SDL_Renderer *renderer, TTF_Font *font, int screenWidth, int screenHeight);
+    Game(SDL_Renderer *renderer, int screenWidth, int screenHeight);
     ~Game();
     void run();
 
 private:
     SDL_Renderer *renderer;
-    TTF_Font *font;
+    TTF_Font *font1;
+     TTF_Font *font2;
     SDL_Texture *backgroundTexture;
 
     void drawBackground();
