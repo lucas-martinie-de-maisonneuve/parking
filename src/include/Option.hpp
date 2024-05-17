@@ -12,9 +12,11 @@ public:
     Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
     ~Option();
     void displayOption();
-    int mousePositionOption(int x, int y); 
+    int mousePositionOption(); 
 
 private:
+// event
+SDL_Event eventOption;
     SDL_Renderer *renderer;
     TTF_Font *fontOption1;
     TTF_Font *fontOption2;
@@ -29,8 +31,6 @@ private:
     SDL_Texture *backgroundTexture;
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
-
-
 };
 
 #endif

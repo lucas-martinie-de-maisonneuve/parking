@@ -95,13 +95,34 @@ void Option::displayOption()
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
 }
 
-int Option::mousePositionOption(int x, int y)
+int Option::mousePositionOption()
 {
-    if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
-        y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
+    // Handle events
+    while (SDL_PollEvent(&eventOption))
     {
-        return 10;
+        if (eventOption.type == SDL_QUIT)
+        {
+            return -1;
+        }
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
+            y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
+
+        {
+            buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
+            if (eventOption.type == SDL_MOUSEBUTTONDOWN && eventOption.button.button == SDL_BUTTON_LEFT)
+            {
+                std::cout << "Button clicked Option" << std::endl;
+                return 10; // Button clicked
+            }
+        }
+        else
+        {
+            buttonRect = {screenWidth - 60, 25, 60, 20}; // Normal state
+        }
     }
-    
-    return 0;
+    return 20;
 }
