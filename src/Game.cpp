@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include <iostream>
+using namespace std;
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
@@ -45,7 +46,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 
     
     // Load background image
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/background1.png");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundGame.jpeg");
     if (!backgroundSurface)
     {
         cerr << "Failed to load background image: " << IMG_GetError() << endl;
@@ -55,7 +56,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     SDL_FreeSurface(backgroundSurface);
     if (!backgroundTexture)
     {
-        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create background texture: " << SDL_GetError() << endl;
     }
 
     // Load button image
@@ -78,21 +79,21 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 Game::~Game()
 {
     // Font
-    TTF_CloseFont(font1);
+    TTF_CloseFont(font);
     TTF_CloseFont(font2);   
 
     // Texture
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
-    TTF_CloseFont(font);
-    TTF_CloseFont(font2);
+  
     TTF_Quit();
     IMG_Quit();
 }
 
 void Game::displayGame()
 {
+    // Background
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);

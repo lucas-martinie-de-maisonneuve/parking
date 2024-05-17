@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         if (pageState == 0)
             game.displayGame();
         else if (pageState == 10)
-            menu.run();
+            menu.runMenu();
 
         SDL_RenderPresent(renderer);
 

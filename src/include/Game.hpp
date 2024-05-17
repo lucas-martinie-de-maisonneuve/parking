@@ -27,12 +27,9 @@ private:
 
     // Texture
     SDL_Texture *backgroundTexture;
-    SDL_Texture *textTitleGame;
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
 
-    // Rect
-    SDL_Rect textRect;
     void drawCheckerboard();
 
 };
