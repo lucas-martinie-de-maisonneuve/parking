@@ -1,25 +1,23 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#ifndef OPTION_HPP
+#define OPTION_HPP
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 
-class Game
+class Option
 {
 public:
-    Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
-    ~Game();
-    void displayGame();
-    int mousePositionGame(); 
+    Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
+    ~Option();
+    void displayOption();
+    int mousePositionOption(int x, int y); 
 
 private:
-
-SDL_Event eventGame;
     SDL_Renderer *renderer;
-    TTF_Font *font;
-    TTF_Font *font2;
+    TTF_Font *fontOption1;
+    TTF_Font *fontOption2;
     int screenWidth;
     int screenHeight;
 
@@ -32,7 +30,6 @@ SDL_Event eventGame;
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
 
-    void drawCheckerboard();
 
 };
 

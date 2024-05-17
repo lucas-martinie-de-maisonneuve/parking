@@ -1,7 +1,11 @@
+using namespace std;
+
 #include "Window.hpp"
 #include "Game.hpp"
 #include "Menu.hpp"
-int pageState = 0;
+// #include "Option.hpp"
+
+int pageState = 10;
 int screenWidth = 600;
 int screenHeight = 750;
 
@@ -11,7 +15,7 @@ int main(int argc, char *argv[])
     Window window(screenWidth, screenHeight);
     if (!window.isInitialized())
     {
-        std::cerr << "Failed to initialize the window." << std::endl;
+        cerr << "Failed to initialize the window." << endl;
         return -1;
     }
 
@@ -21,39 +25,36 @@ int main(int argc, char *argv[])
     // Create game instance
     Game game(renderer, screenWidth, screenHeight);
     Menu menu(renderer, screenWidth, screenHeight);
+    // Option option(renderer, screenWidth, screenHeight);
 
     // Menu
     menu.loadMenuItems();
 
     // Main game loop
     bool running = true;
-    SDL_Event event;
+   
     while (running)
     {
-        // Handle events
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                running = false;
-            }
-            else if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                int x, y;
-                SDL_GetMouseState(&x, &y);
-                if (game.mousePositionGame(x, y))
-                {
-                    pageState = 10;
-                }
-            }
-        }
-
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        if (pageState == 0)
+
+        if (pageState == -1)
+            running = false;
+
+        else if (pageState == 0) {
             game.displayGame();
-        else if (pageState == 10)
+            pageState = game.mousePositionGame();
+        }
+
+        else if (pageState == 10){
             menu.runMenu();
+            pageState = menu.mousePositionMenu();
+        }
+
+        else if (pageState == 20){
+            running = false;
+        // option.runOption();
+        }
 
         SDL_RenderPresent(renderer);
 

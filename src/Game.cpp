@@ -120,12 +120,34 @@ void Game::drawCheckerboard()
     }
 }
 
-int Game::mousePositionGame(int x, int y)
+
+int Game::mousePositionGame()
 {
-    if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
-        y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
+    // Handle events
+    while (SDL_PollEvent(&eventGame))
     {
-        return 10;
+        if (eventGame.type == SDL_QUIT)
+        {
+            return -1;
+        }
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
+            y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
+        {
+            buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
+            if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
+            {
+                std::cout << "Button clicked" << std::endl;
+                return 10; // Button clicked
+            }
+        }
+        else
+        {
+            buttonRect = {screenWidth - 60, 25, 60, 20}; // Normal state
+        }
     }
     return 0;
 }

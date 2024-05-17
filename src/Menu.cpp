@@ -16,7 +16,7 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     font2 = TTF_OpenFont("assets/fonts/Motley Forces.ttf", 50);
     if (!font2)
     {
-        cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font2: " << TTF_GetError() << endl;
     }
 
     // Load font
@@ -32,7 +32,7 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     SDL_FreeSurface(backgroundSurface);
     if (!backgroundTexture)
     {
-        cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create background texture: " << SDL_GetError() << endl;
     }
 }
 
@@ -135,4 +135,47 @@ void Menu::displayMenuOptions()
     // Exit
     SDL_RenderFillRect(renderer, &menuItem3);
     SDL_RenderCopy(renderer, textTexture3, nullptr, &textRect3);
+}
+
+int Menu::mousePositionMenu()
+{
+
+    while (SDL_PollEvent(&eventMenu))
+    {
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        if (eventMenu.type == SDL_MOUSEBUTTONDOWN && eventMenu.button.button == SDL_BUTTON_LEFT)
+        {
+
+            if ((eventMenu.type == SDL_QUIT) || (x >= menuItem3.x && x <= menuItem3.x + menuItem3.w &&
+                                                 y >= menuItem3.y && y <= menuItem3.y + menuItem3.h))
+            {
+                return -1;
+            }
+
+            //  Play
+            if (x >= menuItem1.x && x <= menuItem1.x + menuItem1.w &&
+                y >= menuItem1.y && y <= menuItem1.y + menuItem1.h)
+            {
+                return 0;
+            }
+
+            // Option
+            else if (x >= menuItem2.x && x <= menuItem2.x + menuItem2.w &&
+                     y >= menuItem2.y && y <= menuItem2.y + menuItem2.h)
+            {
+                return 20;
+            }
+
+            // // Exit
+            // else if (x >= menuItem3.x && x <= menuItem3.x + menuItem3.w &&
+            //          y >= menuItem3.y && y <= menuItem3.y + menuItem3.h)
+            // {
+            //     return -1;
+            // }
+        }
+    }
+    return 10;
 }

@@ -15,6 +15,7 @@ public:
 
     void loadMenuItems();
     void runMenu();
+    int mousePositionMenu();
 
 private:
     SDL_Renderer *renderer;
@@ -39,6 +40,9 @@ private:
     SDL_Rect menuItem1;
     SDL_Rect menuItem2;
     SDL_Rect menuItem3;
+
+    // Event
+    SDL_Event eventMenu;
 
     void loadTitle();
     void loadMenuOptions();
