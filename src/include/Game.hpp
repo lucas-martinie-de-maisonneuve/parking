@@ -21,16 +21,19 @@ private:
     int screenWidth;
     int screenHeight;
 
-    SDL_Texture *backgroundTexture;
-    SDL_Texture *buttonTexture;
-    SDL_Texture *textTexture;
+    // Rect 
     SDL_Rect buttonRect;
     SDL_Rect textRect;
 
-    void drawBackground();
-    void drawTitle();
+    // Texture
+    SDL_Texture *backgroundTexture;
+    SDL_Texture *textTitleGame;
+    SDL_Texture *buttonTexture;
+    SDL_Texture *textTexture;
+
+    // Rect
+    SDL_Rect textRect;
     void drawCheckerboard();
-    void drawButton();
 
 };
 

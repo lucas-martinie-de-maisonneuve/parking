@@ -48,7 +48,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/background1.png");
     if (!backgroundSurface)
     {
-        std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load background image: " << IMG_GetError() << endl;
     }
 
     backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
@@ -77,6 +77,11 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 
 Game::~Game()
 {
+    // Font
+    TTF_CloseFont(font1);
+    TTF_CloseFont(font2);   
+
+    // Texture
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);

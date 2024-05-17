@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include "Menu.hpp"
 int pageState = 0;
-int screenWidth = 585;
+int screenWidth = 600;
 int screenHeight = 750;
 
 int main(int argc, char *argv[])
@@ -18,11 +18,12 @@ int main(int argc, char *argv[])
     // Get renderer
     SDL_Renderer *renderer = window.getRenderer();
 
-
     // Create game instance
     Game game(renderer, screenWidth, screenHeight);
-
     Menu menu(renderer, screenWidth, screenHeight);
+
+    // Menu
+    menu.loadMenuItems();
 
     // Main game loop
     bool running = true;
@@ -58,8 +59,6 @@ int main(int argc, char *argv[])
 
         SDL_Delay(16);
     }
-
-    // Cleanup resources
 
     return 0;
 }
