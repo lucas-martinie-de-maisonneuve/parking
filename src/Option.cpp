@@ -43,7 +43,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 
     
     // Load background image
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundOption.jpeg");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.png");
     if (!backgroundSurface)
     {
         cerr << "Failed to load background image: " << IMG_GetError() << endl;
