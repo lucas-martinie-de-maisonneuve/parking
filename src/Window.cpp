@@ -37,6 +37,7 @@ Window::Window(int screenWidth, int screenHeight) : window(nullptr), renderer(nu
     initialized = true;
 }
 
+
 Window::~Window() {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
@@ -44,7 +45,7 @@ Window::~Window() {
     if (window) {
         SDL_DestroyWindow(window);
     }
-    // TTF_Quit(); // Move TTF_Quit() to a separate cleanup function
+    TTF_Quit();
 }
 
 bool Window::isInitialized() const {
