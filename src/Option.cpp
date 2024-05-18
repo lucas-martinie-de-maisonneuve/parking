@@ -141,10 +141,39 @@ void Option:: keyboardDirection(){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120); 
     SDL_RenderFillRect(renderer, &transparentRectArrow); 
 
+    // Text Arrow
+
+    textArrowRect = {100, 380, 400, 250};
+
+    vector<string> linesArrow = {
+        "move Up",
+        "move Down",
+        "move Left",
+        "move Right " 
+    };
+
+    int xOffset = textArrowRect.x + 130;    
+    int yOffset = textArrowRect.y + 12;
+    for (const auto &line : linesArrow){
+        SDL_Surface *lineArrowSurface = TTF_RenderText_Solid(fontOption1, line.c_str(), {255, 255, 255, 255});
+        lineTexture = SDL_CreateTextureFromSurface(renderer, lineArrowSurface);
+        int lineWidth, lineHeight;
+        TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
+        lineRect ={xOffset, yOffset, lineWidth, lineHeight};
+        SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
+        SDL_FreeSurface(lineArrowSurface);
+        yOffset += lineHeight + 36;
+    }
+
+
+
+
+
+    // Arrow image
 
     vector<string> imagePaths = {"assets/img/ArrowU.png", "assets/img/ArrowD.png", "assets/img/ArrowL.png", "assets/img/ArrowR.png"};
 
-    int xPos = 125;
+    int xPos = 385;
      
     for (const auto& imagePath : imagePaths) {
         
@@ -162,17 +191,15 @@ void Option:: keyboardDirection(){
         }
 
         // Position + size image
-        rectArrow = {xPos, 530, 50, 50};
+        rectArrow = {155, xPos, 40, 40};
         SDL_RenderCopy(renderer, textureArrow, nullptr, &rectArrow);
 
         // Increment x position for next image
-        xPos += 100;
+        xPos += 60;
     }
 
 
 }
-
-
 
 
 int Option::mousePositionOption()

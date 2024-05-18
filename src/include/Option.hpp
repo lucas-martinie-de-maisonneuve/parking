@@ -32,6 +32,7 @@ SDL_Event eventOption;
     SDL_Rect textRulesRect;
     SDL_Rect lineRect;
     SDL_Rect rectArrow;
+    SDL_Rect textArrowRect;
 
     // Texture
     SDL_Texture *backgroundTexture;
