@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 
     // Menu
     menu.loadMenuItems();
+    
 
     // Main game loop
     bool running = true;

@@ -18,13 +18,13 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     fontOption2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
     if (!fontOption2)
     {
-        cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font2: " << TTF_GetError() << endl;
     }
 
     SDL_Surface *textSurface = TTF_RenderText_Solid(fontOption2, "Rules", {255, 255, 255, 255});
     if (!textSurface)
     {
-       cerr << "Failed to render text: " << TTF_GetError() << std::endl;
+       cerr << "Failed to render text: " << TTF_GetError() << endl;
     }
 
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -83,7 +83,6 @@ Option::~Option()
     SDL_DestroyTexture(textTexture);
     SDL_DestroyTexture(lineTexture);
     SDL_DestroyTexture(textureArrow);
-
   
     TTF_Quit();
     IMG_Quit();
@@ -103,23 +102,20 @@ void Option::displayOption()
 
 void Option:: textRule() {
 
-    // Transparent rectangle
- 
+    // Transparent rect
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120); 
     SDL_RenderFillRect(renderer, &textRulesRect);
 
     textRulesRect = {screenWidth / 2 - 200, 150, 400, 200};
 
-    // Render each line of text
     vector<string> lines = {
         "Slide the blocking boats in their lanes, until the",
         "path is clear for your boat to escape. Boats can only",
         "slide forward & backward, not sideways. May your",
         "parking skills be sharp and your maneuvers " , 
         "smooth as you navigate the waters !"
-             
-         
+          
     };
 
     int xOffset = textRulesRect.x + 25;    
@@ -140,6 +136,12 @@ void Option:: textRule() {
 
 void Option:: keyboardDirection(){
 
+        // Transparent rect
+    SDL_Rect transparentRectArrow = {100, 370, 400, 250};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120); 
+    SDL_RenderFillRect(renderer, &transparentRectArrow); 
+
+
     vector<string> imagePaths = {"assets/img/ArrowU.png", "assets/img/ArrowD.png", "assets/img/ArrowL.png", "assets/img/ArrowR.png"};
 
     int xPos = 125;
@@ -152,15 +154,15 @@ void Option:: keyboardDirection(){
             cerr << "Failed to load image: " << imagePath << ". Error: " << IMG_GetError() << endl;
         }
 
-        // Create texture from surface
+//    Texture
         textureArrow = SDL_CreateTextureFromSurface(renderer, surfaceArrow);
         SDL_FreeSurface(surfaceArrow);
         if (!textureArrow) {
             cerr << "Failed to create texture from image: " << imagePath << ". Error: " << SDL_GetError() << endl;
         }
 
-        // Position and size of image
-        rectArrow = {xPos, 650, 50, 50};
+        // Position + size image
+        rectArrow = {xPos, 530, 50, 50};
         SDL_RenderCopy(renderer, textureArrow, nullptr, &rectArrow);
 
         // Increment x position for next image

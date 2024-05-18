@@ -15,6 +15,7 @@ public:
     int mousePositionOption(); 
     void textRule();
     void keyboardDirection();
+   
  
 private:
 // event
