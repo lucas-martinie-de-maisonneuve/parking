@@ -43,12 +43,22 @@ int main(int argc, char *argv[])
 
         else if (pageState == 0)
         {
+            if (!game.gameLoaded)
+            {
+                game.loadGameTextures();
+                game.gameLoaded = true;
+            }
             game.displayGame();
-            pageState = game.mousePositionGame();
+            pageState = game.eventHandlerGame();
         }
 
         else if (pageState == 10)
         {
+            if (game.gameLoaded)
+            {
+                game.unloadGameTexture();
+                game.gameLoaded = false;
+            }
             menu.runMenu();
             pageState = menu.mousePositionMenu();
         }

@@ -12,18 +12,20 @@ public:
     Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
     ~Game();
     void displayGame();
-    int mousePositionGame(); 
+    int eventHandlerGame();
+    void loadGameTextures();
+    void unloadGameTexture();
+    bool gameLoaded = false;
 
 private:
-
-SDL_Event eventGame;
+    SDL_Event eventGame;
     SDL_Renderer *renderer;
     TTF_Font *font;
     TTF_Font *font2;
     int screenWidth;
     int screenHeight;
 
-    // Rect 
+    // Rect
     SDL_Rect buttonRect;
     SDL_Rect textRect;
 
@@ -33,7 +35,6 @@ SDL_Event eventGame;
     SDL_Texture *textTexture;
 
     void drawCheckerboard();
-
 };
 
 #endif

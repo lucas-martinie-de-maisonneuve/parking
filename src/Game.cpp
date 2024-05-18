@@ -7,13 +7,6 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr)
 {
-    // Initialize SDL TTF
-    // if (TTF_Init() == -1)
-    // {
-    //     std::cerr << "SDL TTF initialization failed: " << TTF_GetError() << std::endl;
-    //     // Handle initialization failure
-    // }
-
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
     {
@@ -25,12 +18,35 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     {
         std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
+}
 
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {255, 255, 255, 255});
+Game::~Game()
+{
+    // Font
+    TTF_CloseFont(font);
+    TTF_CloseFont(font2);
+    unloadGameTexture();
+
+    TTF_Quit();
+    IMG_Quit();
+}
+
+void Game::displayGame()
+{
+    // Background
+    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
+    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
+    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+    drawCheckerboard();
+}
+
+void Game::loadGameTextures()
+{
+    // ** Load text texture
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {150, 27, 0, 255});
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
-        // Handle text rendering failure
     }
 
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -38,14 +54,12 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     if (!textTexture)
     {
         std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-        // Handle text texture creation failure
     }
 
     int textWidth, textHeight;
     TTF_SizeText(font2, "Jeu du parking", &textWidth, &textHeight);
     textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
 
-    
     // Load background image
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/BackgrounGame.png");
     if (!backgroundSurface)
@@ -75,30 +89,17 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
+    cout << "gameLoaded";
 }
 
-Game::~Game()
+void Game::unloadGameTexture()
 {
-    // Font
-    TTF_CloseFont(font);
-    TTF_CloseFont(font2);   
-
     // Texture
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
-  
-    TTF_Quit();
-    IMG_Quit();
-}
+    cout << "gameUnLoaded";
 
-void Game::displayGame()
-{
-    // Background
-    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
-    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-    drawCheckerboard();
 }
 
 void Game::drawCheckerboard()
@@ -121,8 +122,7 @@ void Game::drawCheckerboard()
     }
 }
 
-
-int Game::mousePositionGame()
+int Game::eventHandlerGame()
 {
     // Handle events
     while (SDL_PollEvent(&eventGame))
@@ -134,16 +134,15 @@ int Game::mousePositionGame()
 
         int x, y;
         SDL_GetMouseState(&x, &y);
-
+        
+        // Button to return to main page
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
             y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
         {
             buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
-            {
-                std::cout << "Button clicked" << std::endl;
-                
-                return 10; // Button clicked
+            {   
+                return 10; 
             }
         }
         else
