@@ -81,6 +81,9 @@ Option::~Option()
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
+    SDL_DestroyTexture(lineTexture);
+    SDL_DestroyTexture(textureArrow);
+
   
     TTF_Quit();
     IMG_Quit();
@@ -94,6 +97,7 @@ void Option::displayOption()
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
 
     textRule();
+    keyboardDirection();
 }
 
 
@@ -111,7 +115,7 @@ void Option:: textRule() {
     // Render each line of text
     vector<string> lines = {
         "Slide the blocking boats in their lanes,",
-        "until the path is clear for the your boat ",
+        "until the path is clear for your boat ",
         "to escape. Boats can only slide ",
         "forward & backward, not sideways."    
     };
@@ -120,18 +124,50 @@ void Option:: textRule() {
     for (const auto &line : lines)
     {
         SDL_Surface *lineSurface = TTF_RenderText_Solid(fontOption1, line.c_str(), {255, 255, 255, 255});
-        SDL_Texture *lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+        lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
         int lineWidth, lineHeight;
         TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
-        SDL_Rect lineRect = {textRulesRect.x + 10, yOffset, lineWidth, lineHeight};
+        lineRect = {textRulesRect.x + 10, yOffset, lineWidth, lineHeight};
         SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
         SDL_FreeSurface(lineSurface);
-        SDL_DestroyTexture(lineTexture);
         yOffset += lineHeight + 5; // Move down for the next line
+    }
+}
+
+void Option:: keyboardDirection(){
+
+    vector<string> imagePaths = {"assets/img/ArrowU.png", "assets/img/ArrowD.png", "assets/img/ArrowL.png", "assets/img/ArrowR.png"};
+
+    int xPos = 125;
+     
+    for (const auto& imagePath : imagePaths) {
+        
+        // Load image
+        SDL_Surface* surfaceArrow = IMG_Load(imagePath.c_str());
+        if (!surfaceArrow) {
+            cerr << "Failed to load image: " << imagePath << ". Error: " << IMG_GetError() << endl;
+        }
+
+        // Create texture from surface
+        textureArrow = SDL_CreateTextureFromSurface(renderer, surfaceArrow);
+        SDL_FreeSurface(surfaceArrow);
+        if (!textureArrow) {
+            cerr << "Failed to create texture from image: " << imagePath << ". Error: " << SDL_GetError() << endl;
+        }
+
+        // Position and size of image
+        rectArrow = {xPos, 650, 50, 50};
+        SDL_RenderCopy(renderer, textureArrow, nullptr, &rectArrow);
+
+        // Increment x position for next image
+        xPos += 100;
     }
 
 
 }
+
+
+
 
 int Option::mousePositionOption()
 {
