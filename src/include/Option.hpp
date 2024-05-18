@@ -13,7 +13,8 @@ public:
     ~Option();
     void displayOption();
     int mousePositionOption(); 
-
+    void textRule();
+ 
 private:
 // event
 SDL_Event eventOption;
@@ -26,6 +27,7 @@ SDL_Event eventOption;
     // Rect 
     SDL_Rect buttonRect;
     SDL_Rect textRect;
+    SDL_Rect textRulesRect;
 
     // Texture
     SDL_Texture *backgroundTexture;

@@ -1,17 +1,15 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-// Laod files
+// Load files
 #include "Option.hpp"
-
 
 Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       fontOption1(nullptr), fontOption2(nullptr), textTexture(nullptr)
 {
-
-
-    fontOption1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    fontOption1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 18);
     if (!fontOption1)
     {
         cerr << "Failed to load font: " << TTF_GetError() << std::endl;
@@ -34,14 +32,12 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     if (!textTexture)
     {
         cerr << "Failed to create text texture: " << SDL_GetError() << endl;
-    
     }
 
     int textWidth, textHeight;
-    TTF_SizeText(fontOption2, "Jeu du parking", &textWidth, &textHeight);
+    TTF_SizeText(fontOption2, "Rules", &textWidth, &textHeight);
     textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
 
-    
     // Load background image
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundOption.png");
     if (!backgroundSurface)
@@ -60,7 +56,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     SDL_Surface *buttonSurface = IMG_Load("assets/img/buttonmenu.png");
     if (!buttonSurface)
     {
-        std::cerr << "Failed to load button image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load button image: " << IMG_GetError() << std::endl;
     }
 
     buttonTexture = SDL_CreateTextureFromSurface(renderer, buttonSurface);
@@ -71,6 +67,8 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
+
+
 }
 
 Option::~Option()
@@ -89,10 +87,50 @@ Option::~Option()
 }
 
 void Option::displayOption()
-{    // Background
-    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
+{
+    // Background
+    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);   
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+
+    textRule();
+}
+
+
+
+void Option:: textRule() {
+
+     // Transparent rectangle
+    SDL_RenderFillRect(renderer, &textRulesRect);
+    // Create a semi-transparent rectangle for the text area
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128); // RGBA: black with 50% transparency
+
+    textRulesRect = {screenWidth / 2 - 200, 150, 400, 300};
+
+    // Render each line of text
+    vector<string> lines = {
+        "Slide the blocking boats in their lanes,",
+        "until the path is clear for the your boat ",
+        "to escape. Boats can only slide ",
+        "forward & backward, not sideways."    
+    };
+
+    int yOffset = textRulesRect.y + 10;
+    for (const auto &line : lines)
+    {
+        SDL_Surface *lineSurface = TTF_RenderText_Solid(fontOption1, line.c_str(), {255, 255, 255, 255});
+        SDL_Texture *lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+        int lineWidth, lineHeight;
+        TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
+        SDL_Rect lineRect = {textRulesRect.x + 10, yOffset, lineWidth, lineHeight};
+        SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
+        SDL_FreeSurface(lineSurface);
+        SDL_DestroyTexture(lineTexture);
+        yOffset += lineHeight + 5; // Move down for the next line
+    }
+
+
 }
 
 int Option::mousePositionOption()
@@ -110,7 +148,6 @@ int Option::mousePositionOption()
 
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
             y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
-
         {
             buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
             if (eventOption.type == SDL_MOUSEBUTTONDOWN && eventOption.button.button == SDL_BUTTON_LEFT)
