@@ -94,7 +94,6 @@ void Menu::loadTitle()
 void Menu::loadMenuOptions()
 {
     // Draw menu items
-
     menuItem1 = {screenWidth / 2 - 100, 100, 200, 50};
     menuItem2 = {screenWidth / 2 - 100, 170, 200, 50};
     menuItem3 = {screenWidth / 2 - 100, 240, 200, 50};
@@ -149,12 +148,15 @@ int Menu::mousePositionMenu()
 
         int x, y;
         SDL_GetMouseState(&x, &y);
-
-        if (eventMenu.type == SDL_MOUSEBUTTONDOWN && eventMenu.button.button == SDL_BUTTON_LEFT)
+        if (eventMenu.type == SDL_QUIT)
+        {
+            return -1;
+        }
+        else if (eventMenu.type == SDL_MOUSEBUTTONDOWN && eventMenu.button.button == SDL_BUTTON_LEFT)
         {
 
-            if ((eventMenu.type == SDL_QUIT) || (x >= menuItem3.x && x <= menuItem3.x + menuItem3.w &&
-                                                 y >= menuItem3.y && y <= menuItem3.y + menuItem3.h))
+            if (x >= menuItem3.x && x <= menuItem3.x + menuItem3.w &&
+                y >= menuItem3.y && y <= menuItem3.y + menuItem3.h)
             {
                 return -1;
             }
