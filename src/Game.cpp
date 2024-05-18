@@ -18,11 +18,12 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     {
         std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 }
 
 Game::~Game()
 {
-    // Font
     TTF_CloseFont(font);
     TTF_CloseFont(font2);
     unloadGameTexture();
@@ -33,7 +34,6 @@ Game::~Game()
 
 void Game::displayGame()
 {
-    // Background
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
@@ -42,8 +42,7 @@ void Game::displayGame()
 
 void Game::loadGameTextures()
 {
-    // ** Load text texture
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Jeu du parking", {150, 27, 0, 255});
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -60,7 +59,6 @@ void Game::loadGameTextures()
     TTF_SizeText(font2, "Jeu du parking", &textWidth, &textHeight);
     textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
 
-    // Load background image
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/BackgrounGame.png");
     if (!backgroundSurface)
     {
@@ -74,7 +72,6 @@ void Game::loadGameTextures()
         cerr << "Failed to create background texture: " << SDL_GetError() << endl;
     }
 
-    // Load button image
     SDL_Surface *buttonSurface = IMG_Load("assets/img/buttonmenu.png");
     if (!buttonSurface)
     {
@@ -94,12 +91,10 @@ void Game::loadGameTextures()
 
 void Game::unloadGameTexture()
 {
-    // Texture
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
     cout << "gameUnLoaded";
-
 }
 
 void Game::drawCheckerboard()
@@ -124,7 +119,6 @@ void Game::drawCheckerboard()
 
 int Game::eventHandlerGame()
 {
-    // Handle events
     while (SDL_PollEvent(&eventGame))
     {
         if (eventGame.type == SDL_QUIT)
@@ -134,20 +128,19 @@ int Game::eventHandlerGame()
 
         int x, y;
         SDL_GetMouseState(&x, &y);
-        
-        // Button to return to main page
+
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
             y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
         {
-            buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
+            buttonRect = {screenWidth - 64, 24, 62, 22};
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
-            {   
+            {
                 return 10; 
             }
         }
         else
         {
-            buttonRect = {screenWidth - 60, 25, 60, 20}; // Normal state
+            buttonRect = {screenWidth - 60, 25, 60, 20};
         }
     }
     return 0;
