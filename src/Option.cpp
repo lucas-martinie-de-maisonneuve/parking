@@ -9,7 +9,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       fontOption1(nullptr), fontOption2(nullptr), textTexture(nullptr)
 {
-    fontOption1 = TTF_OpenFont("assets/fonts/Coffee.ttf", 18);
+    fontOption1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 18);
     if (!fontOption1)
     {
         cerr << "Failed to load font: " << TTF_GetError() << std::endl;
@@ -101,14 +101,13 @@ void Option::displayOption()
 }
 
 
-
 void Option:: textRule() {
 
-     // Transparent rectangle
-    SDL_RenderFillRect(renderer, &textRulesRect);
-    // Create a semi-transparent rectangle for the text area
+    // Transparent rectangle
+ 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128); // RGBA: black with 50% transparency
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120); 
+    SDL_RenderFillRect(renderer, &textRulesRect);
 
     textRulesRect = {screenWidth / 2 - 200, 150, 400, 300};
 
@@ -120,14 +119,15 @@ void Option:: textRule() {
         "forward & backward, not sideways."    
     };
 
-    int yOffset = textRulesRect.y + 10;
+    int xOffset = textRulesRect.x + 35;    
+    int yOffset = textRulesRect.y + 30;
     for (const auto &line : lines)
     {
         SDL_Surface *lineSurface = TTF_RenderText_Solid(fontOption1, line.c_str(), {255, 255, 255, 255});
         lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
         int lineWidth, lineHeight;
         TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
-        lineRect = {textRulesRect.x + 10, yOffset, lineWidth, lineHeight};
+        lineRect ={xOffset, yOffset, lineWidth, lineHeight};
         SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
         SDL_FreeSurface(lineSurface);
         yOffset += lineHeight + 5; // Move down for the next line
