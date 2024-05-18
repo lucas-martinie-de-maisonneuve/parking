@@ -14,6 +14,7 @@ public:
     void displayOption();
     int mousePositionOption(); 
     void textRule();
+    void keyboardDirection();
  
 private:
 // event
@@ -28,11 +29,17 @@ SDL_Event eventOption;
     SDL_Rect buttonRect;
     SDL_Rect textRect;
     SDL_Rect textRulesRect;
+    SDL_Rect lineRect;
+    SDL_Rect rectArrow;
 
     // Texture
     SDL_Texture *backgroundTexture;
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
+    SDL_Texture *lineTexture;
+    SDL_Texture* textureArrow;
+
+    
 };
 
 #endif
