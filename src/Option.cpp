@@ -21,7 +21,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
         cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
 
-    SDL_Surface *textSurface = TTF_RenderText_Solid(fontOption1, "Jeu du parking", {255, 255, 255, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(fontOption2, "Rules", {255, 255, 255, 255});
     if (!textSurface)
     {
        cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -109,18 +109,21 @@ void Option:: textRule() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120); 
     SDL_RenderFillRect(renderer, &textRulesRect);
 
-    textRulesRect = {screenWidth / 2 - 200, 150, 400, 300};
+    textRulesRect = {screenWidth / 2 - 200, 150, 400, 200};
 
     // Render each line of text
     vector<string> lines = {
-        "Slide the blocking boats in their lanes,",
-        "until the path is clear for your boat ",
-        "to escape. Boats can only slide ",
-        "forward & backward, not sideways."    
+        "Slide the blocking boats in their lanes, until the",
+        "path is clear for your boat to escape. Boats can only",
+        "slide forward & backward, not sideways. May your",
+        "parking skills be sharp and your maneuvers " , 
+        "smooth as you navigate the waters !"
+             
+         
     };
 
-    int xOffset = textRulesRect.x + 35;    
-    int yOffset = textRulesRect.y + 30;
+    int xOffset = textRulesRect.x + 25;    
+    int yOffset = textRulesRect.y + 20;
     for (const auto &line : lines)
     {
         SDL_Surface *lineSurface = TTF_RenderText_Solid(fontOption1, line.c_str(), {255, 255, 255, 255});
@@ -130,9 +133,10 @@ void Option:: textRule() {
         lineRect ={xOffset, yOffset, lineWidth, lineHeight};
         SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
         SDL_FreeSurface(lineSurface);
-        yOffset += lineHeight + 5; // Move down for the next line
+        yOffset += lineHeight + 5;
     }
 }
+
 
 void Option:: keyboardDirection(){
 
