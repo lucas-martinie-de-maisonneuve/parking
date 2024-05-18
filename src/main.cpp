@@ -27,9 +27,6 @@ int main(int argc, char *argv[])
     Menu menu(renderer, screenWidth, screenHeight);
     Option option(renderer, screenWidth, screenHeight);
 
-    // Menu
-    menu.loadMenuItems();
-
     // Main game loop
     bool running = true;
 
@@ -48,17 +45,28 @@ int main(int argc, char *argv[])
                 game.loadGameTextures();
                 game.gameLoaded = true;
             }
+            else if (menu.menuLoaded)
+            {
+                menu.unloadMenuItems();
+                menu.menuLoaded = false;
+            }
             game.displayGame();
             pageState = game.eventHandlerGame();
         }
 
         else if (pageState == 10)
         {
+            if (!menu.menuLoaded)
+            {
+                menu.loadMenuItems();
+                menu.menuLoaded = true;
+            }
             if (game.gameLoaded)
             {
                 game.unloadGameTexture();
                 game.gameLoaded = false;
             }
+
             menu.runMenu();
             pageState = menu.mousePositionMenu();
         }

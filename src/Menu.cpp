@@ -18,10 +18,18 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     {
         cerr << "Failed to load font2: " << TTF_GetError() << endl;
     }
+}
 
-    // Load font
-    TTF_Font *font1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 24);
-    TTF_Font *font2 = TTF_OpenFont("assets/fonts/Motley Forces.ttf", 50);
+Menu::~Menu()
+{
+    unloadMenuItems();
+    // Font
+    TTF_CloseFont(font1);
+    TTF_CloseFont(font2);
+}
+
+void Menu::loadBackground()
+{
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.png");
     if (!backgroundSurface)
     {
@@ -36,25 +44,21 @@ Menu::Menu(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 }
 
-Menu::~Menu()
+void Menu::loadMenuItems()
 {
+    loadTitle();
+    loadMenuOptions();
+    loadBackground();
+}
 
-    // Font
-    TTF_CloseFont(font1);
-    TTF_CloseFont(font2);
-
+void Menu::unloadMenuItems()
+{
     // Texture
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(textTitle);
     SDL_DestroyTexture(textTexture1);
     SDL_DestroyTexture(textTexture2);
     SDL_DestroyTexture(textTexture3);
-}
-
-void Menu::loadMenuItems()
-{
-    loadTitle();
-    loadMenuOptions();
 }
 
 void Menu::runMenu()

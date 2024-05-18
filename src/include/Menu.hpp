@@ -14,8 +14,12 @@ public:
     ~Menu();
 
     void loadMenuItems();
+    void unloadMenuItems();
+
     void runMenu();
     int mousePositionMenu();
+
+    bool menuLoaded = false;
 
 private:
     SDL_Renderer *renderer;
@@ -47,6 +51,7 @@ private:
     void loadTitle();
     void loadMenuOptions();
     void displayMenuOptions();
+    void loadBackground();
 
     int screenWidth;
     int screenHeight;
