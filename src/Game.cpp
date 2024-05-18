@@ -1,4 +1,5 @@
 #include "Game.hpp"
+// #include "Boat.hpp"
 #include <iostream>
 using namespace std;
 
@@ -25,7 +26,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
         std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
 
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font2, "Jeu du parking", {255, 255, 255, 255});
     if (!textSurface)
     {
         std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -46,7 +47,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 
     
     // Load background image
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundGame.jpeg");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/BackgrounGame.png");
     if (!backgroundSurface)
     {
         cerr << "Failed to load background image: " << IMG_GetError() << endl;
@@ -141,6 +142,7 @@ int Game::mousePositionGame()
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
             {
                 std::cout << "Button clicked" << std::endl;
+                
                 return 10; // Button clicked
             }
         }

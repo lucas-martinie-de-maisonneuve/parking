@@ -23,7 +23,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
         cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
     }
 
-    SDL_Surface *textSurface = TTF_RenderText_Solid(fontOption1, "Jeu du parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Solid(fontOption1, "Jeu du parking", {255, 255, 255, 255});
     if (!textSurface)
     {
        cerr << "Failed to render text: " << TTF_GetError() << std::endl;
@@ -43,7 +43,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
 
     
     // Load background image
-    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundMenu.png");
+    SDL_Surface *backgroundSurface = IMG_Load("assets/img/backgroundOption.png");
     if (!backgroundSurface)
     {
         cerr << "Failed to load background image: " << IMG_GetError() << endl;
@@ -116,7 +116,7 @@ int Option::mousePositionOption()
             if (eventOption.type == SDL_MOUSEBUTTONDOWN && eventOption.button.button == SDL_BUTTON_LEFT)
             {
                 std::cout << "Button clicked Option" << std::endl;
-                return 10; // Button clicked
+                return 10; 
             }
         }
         else
