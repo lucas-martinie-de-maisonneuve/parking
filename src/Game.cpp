@@ -8,7 +8,6 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr)
 {
-    
 
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
@@ -92,33 +91,87 @@ void Game::loadGameTextures()
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
     cout << "gameLoaded";
+
+    SDL_SetTextureBlendMode(boat_Vertical_Texture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(boat_Horizontal_Texture, SDL_BLENDMODE_BLEND);
+    // Load boat textures
+    SDL_Surface *boat_Vertical_Surface = IMG_Load("assets/img/boat_v.png");
+    if (!boat_Vertical_Surface)
+    {
+        cerr << "Failed to load small boat image: " << IMG_GetError() << endl;
+    }
+    boat_Vertical_Texture = SDL_CreateTextureFromSurface(renderer, boat_Vertical_Surface);
+    SDL_FreeSurface(boat_Vertical_Surface);
+    if (!boat_Vertical_Texture)
+    {
+        cerr << "Failed to create small boat texture: " << SDL_GetError() << endl;
+    }
+
+    SDL_Surface *boat_Horizontal_Surface = IMG_Load("assets/img/boat_h.png");
+    if (!boat_Horizontal_Surface)
+    {
+        cerr << "Failed to load large boat image: " << IMG_GetError() << endl;
+    }
+    boat_Horizontal_Texture = SDL_CreateTextureFromSurface(renderer, boat_Horizontal_Surface);
+    SDL_FreeSurface(boat_Horizontal_Surface);
+    if (!boat_Horizontal_Texture)
+    {
+        cerr << "Failed to create large boat texture: " << SDL_GetError() << endl;
+    }
+
+    buttonRect = {screenWidth - 60, 25, 60, 20};
+    cout << "gameLoaded";
 }
 
- void Game::drawBoat(char id, int x, int y, int length, bool horizontal){
+void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
+{
     SDL_Color color;
-        switch (id) {
-        case '1': color = {255, 0, 0, 255}; break; 
-        case '2': color = {0, 255, 0, 255}; break; 
-        case '3': color = {0, 0, 255, 255}; break; 
-        case '4': color = {255, 255, 0, 255}; break; 
-        case '5': color = {255, 165, 0, 255}; break;
-        case '6': color = {128, 0, 128, 255}; break; 
-        default: color = {255, 255, 255, 255}; break;
+    switch (id)
+    {
+    case '1':
+        color = {220, 50, 50, 200}; // Red
+        break;
+    case '2':
+        color = {0, 255, 0, 200}; // Green
+        break;
+    case '3':
+        color = {0, 0, 255, 200}; // Blue
+        break;
+    case '4':
+        color = {255, 255, 0, 200}; // Yellow
+        break;
+    case '5':
+        color = {255, 165, 0, 200}; // Orange
+        break;
+    case '6':
+        color = {128, 50, 100, 200}; // Purple
+        break;
+    default:
+        color = {255, 255, 255, 200}; // White
+        break;
     }
 
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_Texture* texture = horizontal ? boat_Horizontal_Texture : boat_Vertical_Texture;
 
-    for (int i = 0; i < length; ++i) {
-        SDL_Rect rect;
-        if (horizontal) {
-            rect = {x + i * (squareSize +padding), y, squareSize, squareSize};
-        } else {
-            rect = {x, y + i * (squareSize+padding), squareSize, squareSize};
-        }
-        SDL_RenderFillRect(renderer, &rect);
+    SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+    SDL_SetTextureAlphaMod(texture, color.a);
+
+    SDL_Rect rect;
+    if (horizontal)
+    {
+        rect = {x + padding, y, squareSize * length, squareSize};
+    }
+    else
+    {
+        rect = {x, y + padding, squareSize, squareSize * length};
     }
 
- }
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+
+    // Réinitialiser les modulations de couleur et d'alpha après le rendu
+    SDL_SetTextureColorMod(texture, 255, 255, 255);
+    SDL_SetTextureAlphaMod(texture, 255);
+}
 
 void Game::unloadGameTexture()
 {
@@ -126,8 +179,8 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
     SDL_DestroyTexture(textureBoat0);
-   
-    cout << "gameUnLoaded";
+    SDL_DestroyTexture(boat_Vertical_Texture);
+    SDL_DestroyTexture(boat_Horizontal_Texture);
 }
 
 void Game::drawCheckerboard()
@@ -142,34 +195,28 @@ void Game::drawCheckerboard()
                              squareSize,
                              squareSize};
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 185);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 120);
             SDL_RenderFillRect(renderer, &rect);
         }
     }
 }
 
 void Game::displayBoat()
-{  
-     vector<BoatA::BoatInfo> boats = {
-        {'1', 0, 0, 2, true},
-        {'2', 1, 2, 3, false},
-        {'3', 4, 4, 2, true},
-        {'4', 6, 1, 3, false},
-        {'5', 3, 5, 2, true},
-        {'6', 7, 5, 3, false}
-    };
-
-    for (const auto& boat : boats) {
-        drawBoat(boat.id, offsetX + boat.x * (squareSize+padding), offsetY + boat.y * (squareSize+padding), boat.length, boat.horizontal);
-
-    for (int i = 0; i < ROWS; ++i)
+{
+    for (const auto &boat : boats)
     {
-        for (int j = 0; j < COLS; ++j)
+        drawBoat(boat.id, offsetX + boat.x * (squareSize + padding), offsetY + boat.y * (squareSize + padding), boat.length, boat.horizontal);
+
+        for (int i = 0; i < ROWS; ++i)
         {
-            if (myBoat.boatList[i][j]);
+            for (int j = 0; j < COLS; ++j)
+            {
+                if (myBoat.boatList[i][j])
+                    ;
+            }
         }
     }
-}}
+}
 
 int Game::eventHandlerGame()
 {

@@ -39,6 +39,8 @@ private:
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
     SDL_Texture *textureBoat0;
+    SDL_Texture * boat_Vertical_Texture;
+    SDL_Texture * boat_Horizontal_Texture;
 
     void drawCheckerboard();
 
@@ -48,7 +50,14 @@ private:
 
     const int offsetX = (screenWidth - COLS * squareSize) / 2;
     const int offsetY = (screenHeight - ROWS * squareSize) / 2;
-    
+
+    vector<BoatA::BoatInfo> boats = {
+        {'1', 0, 0, 2, true},
+        {'2', 1, 2, 3, false},
+        {'3', 4, 4, 2, true},
+        {'4', 6, 1, 3, false},
+        {'5', 3, 5, 2, false},
+        {'6', 7, 4, 3, false}};
 };
 
 #endif
