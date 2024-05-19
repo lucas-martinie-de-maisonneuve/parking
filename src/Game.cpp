@@ -150,14 +150,7 @@ void Game::drawCheckerboard()
 
 void Game::displayBoat()
 {  
-       struct Boat {
-        char id;
-        int x, y;
-        int length;
-        bool horizontal;
-    };
-
-    Boat boats[] = {
+     vector<BoatA::BoatInfo> boats = {
         {'1', 0, 0, 2, true},
         {'2', 1, 2, 3, false},
         {'3', 4, 4, 2, true},
