@@ -150,7 +150,6 @@ void Game::drawCheckerboard()
 
 void Game::displayBoat()
 {  
-
        struct Boat {
         char id;
         int x, y;
@@ -164,7 +163,7 @@ void Game::displayBoat()
         {'3', 4, 4, 2, true},
         {'4', 6, 1, 3, false},
         {'5', 3, 5, 2, true},
-        {'6', 7, 6, 3, false}
+        {'6', 7, 5, 3, false}
     };
 
     for (const auto& boat : boats) {
@@ -174,17 +173,10 @@ void Game::displayBoat()
     {
         for (int j = 0; j < COLS; ++j)
         {
-            if (myBoat.boatList[i][j])
-            {
-                
-            }
-
-            else {
-
-            }
+            if (myBoat.boatList[i][j]);
         }
     }
-}
+}}
 
 int Game::eventHandlerGame()
 {
