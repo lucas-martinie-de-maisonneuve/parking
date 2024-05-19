@@ -111,9 +111,9 @@ void Game::loadGameTextures()
     for (int i = 0; i < length; ++i) {
         SDL_Rect rect;
         if (horizontal) {
-            rect = {x + i * 50, y, 50, 50};
+            rect = {x + i * (squareSize +padding), y, squareSize, squareSize};
         } else {
-            rect = {x, y + i * 50, 50, 50};
+            rect = {x, y + i * (squareSize+padding), squareSize, squareSize};
         }
         SDL_RenderFillRect(renderer, &rect);
     }
@@ -132,8 +132,6 @@ void Game::unloadGameTexture()
 
 void Game::drawCheckerboard()
 {
-    const int ROWS = 8, COLS = 8;
-    int squareSize = 50;
 
     for (int i = 0; i < ROWS; ++i)
     {
@@ -144,7 +142,6 @@ void Game::drawCheckerboard()
                              squareSize,
                              squareSize};
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 185);
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 185);
             SDL_RenderFillRect(renderer, &rect);
         }
@@ -152,12 +149,7 @@ void Game::drawCheckerboard()
 }
 
 void Game::displayBoat()
-{
-    
-    const int ROWS = 8, COLS = 8;
-
-    int gridOffsetX = (screenWidth - COLS * 50) / 2;
-    int gridOffsetY = (screenHeight - ROWS * 50) / 2;
+{  
 
        struct Boat {
         char id;
@@ -176,10 +168,7 @@ void Game::displayBoat()
     };
 
     for (const auto& boat : boats) {
-        drawBoat(boat.id, gridOffsetX + boat.x * 50, gridOffsetY + boat.y * 50, boat.length, boat.horizontal);
-    }
-
-
+        drawBoat(boat.id, offsetX + boat.x * (squareSize+padding), offsetY + boat.y * (squareSize+padding), boat.length, boat.horizontal);
 
     for (int i = 0; i < ROWS; ++i)
     {

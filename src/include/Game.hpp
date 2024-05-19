@@ -17,15 +17,11 @@ public:
     void loadGameTextures();
     void unloadGameTexture();
     bool gameLoaded = false;
-    void displayBoat(); 
+    void displayBoat();
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
-    
-
 
 private:
-
-
     SDL_Event eventGame;
     SDL_Renderer *renderer;
     TTF_Font *font;
@@ -42,11 +38,17 @@ private:
     SDL_Texture *backgroundTexture;
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
-    SDL_Texture* textureBoat0;
+    SDL_Texture *textureBoat0;
 
     void drawCheckerboard();
 
-   
+    const int ROWS = 8, COLS = 8;
+    int squareSize = 50;
+    const int padding = 1;
+
+    const int offsetX = (screenWidth - COLS * squareSize) / 2;
+    const int offsetY = (screenHeight - ROWS * squareSize) / 2;
+    
 };
 
 #endif
