@@ -79,7 +79,7 @@ void Menu::loadTitle()
     SDL_FreeSurface(textSurface);
     if (!textTitle)
     {
-        cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
     }
 
     int textWidth, textHeight;

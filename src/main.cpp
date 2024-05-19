@@ -61,12 +61,12 @@ int main(int argc, char *argv[])
                 menu.loadMenuItems();
                 menu.menuLoaded = true;
             }
-            else if (game.gameLoaded)
+            if (game.gameLoaded)
             {
                 game.unloadGameTexture();
                 game.gameLoaded = false;
             }
-            else if (option.optionLoaded)
+            if (option.optionLoaded)
             {
                 option.unloadOptionTextures();
                 option.optionLoaded = false;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                 option.loadOptionTextures();
                 option.optionLoaded = true;
             }
-            else if (menu.menuLoaded)
+            if (menu.menuLoaded)
             {
                 menu.unloadMenuItems();
                 menu.menuLoaded = false;

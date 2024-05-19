@@ -7,7 +7,7 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     fontOption1 = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 18);
     if (!fontOption1)
     {
-        cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
     }
 
     fontOption2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
@@ -81,7 +81,7 @@ void Option::loadOptionTextures()
     SDL_Surface *buttonSurface = IMG_Load("assets/img/buttonmenu.png");
     if (!buttonSurface)
     {
-        cerr << "Failed to load button image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load button image: " << IMG_GetError() << endl;
     }
 
     buttonTexture = SDL_CreateTextureFromSurface(renderer, buttonSurface);
@@ -98,6 +98,7 @@ void Option::loadOptionTextures()
 
 void Option::unloadOptionTextures()
 {
+
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
@@ -114,17 +115,20 @@ void Option::unloadOptionTextures()
     {
         SDL_DestroyTexture(texture);
     }
+
+    // Clear the texture vectors
+    lineTextures.clear();
+    arrowTextures.clear();
+    lineArrowTextures.clear();
+
+    // Clear the rect vectors
+    lineRects.clear();
+    arrowRects.clear();
+    lineArrowRects.clear();
 }
+
 void Option::textRule()
 {
-    // Clear previous textures and rects
-    for (auto texture : lineTextures)
-    {
-        SDL_DestroyTexture(texture);
-    }
-    lineTextures.clear();
-    lineRects.clear();
-
     textRulesRect = {screenWidth / 2 - 200, 150, 400, 200};
 
     vector<string> lines = {
@@ -167,20 +171,6 @@ void Option::renderTextRules()
 
 void Option::keyboardDirection()
 {
-    // Clear previous textures and rects
-    for (auto texture : arrowTextures)
-    {
-        SDL_DestroyTexture(texture);
-    }
-    arrowTextures.clear();
-    arrowRects.clear();
-    for (auto texture : lineArrowTextures)
-    {
-        SDL_DestroyTexture(texture);
-    }
-    lineArrowTextures.clear();
-    lineArrowRects.clear();
-
     // Text Arrow
     textArrowRect = {100, 380, 400, 250};
 
@@ -276,7 +266,6 @@ int Option::mousePositionOption()
             buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
             if (eventOption.type == SDL_MOUSEBUTTONDOWN && eventOption.button.button == SDL_BUTTON_LEFT)
             {
-                std::cout << "Button clicked Option" << std::endl;
                 return 10;
             }
         }

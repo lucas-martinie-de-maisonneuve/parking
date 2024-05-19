@@ -10,13 +10,13 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
     {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font: " << TTF_GetError() << endl;
     }
 
     font2 = TTF_OpenFont("assets/fonts/Coffee.ttf", 50);
     if (!font2)
     {
-        std::cerr << "Failed to load font2: " << TTF_GetError() << std::endl;
+        cerr << "Failed to load font2: " << TTF_GetError() << endl;
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -45,14 +45,14 @@ void Game::loadGameTextures()
     SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Jeu du parking", {150, 27, 0, 255});
     if (!textSurface)
     {
-        std::cerr << "Failed to render text: " << TTF_GetError() << std::endl;
+        cerr << "Failed to render text: " << TTF_GetError() << endl;
     }
 
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_FreeSurface(textSurface);
     if (!textTexture)
     {
-        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
     }
 
     int textWidth, textHeight;
@@ -75,18 +75,17 @@ void Game::loadGameTextures()
     SDL_Surface *buttonSurface = IMG_Load("assets/img/buttonmenu.png");
     if (!buttonSurface)
     {
-        std::cerr << "Failed to load button image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load button image: " << IMG_GetError() << endl;
     }
 
     buttonTexture = SDL_CreateTextureFromSurface(renderer, buttonSurface);
     SDL_FreeSurface(buttonSurface);
     if (!buttonTexture)
     {
-        std::cerr << "Failed to create button texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create button texture: " << SDL_GetError() << endl;
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
-    cout << "gameLoaded";
 }
 
 void Game::unloadGameTexture()
@@ -94,7 +93,6 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
-    cout << "gameUnLoaded";
 }
 
 void Game::drawCheckerboard()
