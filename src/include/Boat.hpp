@@ -1,41 +1,56 @@
+#ifndef BOAT_HPP
+#define BOAT_HPP
+
 #include <iostream>
 #include <vector>
 #include <string>
+using namespace std;
 
-class Boats
+class BoatA
 {
 public:
-    char id;
-    int x, y;
-    int length;
-    bool horizontal;
+    struct BoatInfo
+    {
 
-    Boats(char id, int x, int y, int length, bool horizontal)
-        : id(id), x(x), y(y), length(length), horizontal(horizontal) {}
+        char id; // 1 to 6
+        int x, y;
+        int length;      // 2 or 3
+        bool horizontal; // true = H, false = V
+    };
 
-    virtual bool move(char direction, char grid[GRID_SIZE][GRID_SIZE]) = 0;
+    int GridSize = 8;
 
-    virtual ~Boats() = default;
+    // BoatA(char id, int x, int y, int length, bool horizontal)
+    //     : id(id), x(x), y(y), length(length), horizontal(horizontal) {}
+
+    virtual bool move(char direction, char grid[8][8]) = 0;
+
+    virtual ~BoatA() = default;
 };
 
-const int GRID_SIZE = 8;
 
 class Boat
 {
 
 public:
-    char id;
-    int x, y;
-    int length;
-    bool orientation; // true = horizontal, false = vertical
+    const int ROWS = 8;
+    const int COLS = 8;
+    int squareSize = 50;
+    int BoatRow = 4;
+    int BoatCol = 4;
 
-    Boat(char id, int x, int y, int length, bool orientation);
+   vector<vector<int>> boatList;
+    // vector<BoatA::Boat> boats;
+
+    Boat();
     ~Boat();
 
     void grid();
-    int checkNeighbour();
-    int moveUp();
-    int moveDown();
-    int moveRight();
-    int moveLeft();
+    bool checkNeighbour(int row, int col, int distance, char direction);
+    int moveU();
+    int moveD();
+    int moveR();
+    int moveL();
 };
+
+#endif // BOAT_HPP

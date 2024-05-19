@@ -1,12 +1,15 @@
-#include "Game.hpp"
-// #include "Boat.hpp"
 #include <iostream>
 using namespace std;
+#include "Boat.hpp"
+
+#include "Game.hpp"
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr)
 {
+    
+
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
     {
@@ -20,6 +23,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    myBoat.grid();
 }
 
 Game::~Game()
@@ -38,6 +42,7 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
     drawCheckerboard();
+    displayBoat();
 }
 
 void Game::loadGameTextures()
@@ -86,19 +91,47 @@ void Game::loadGameTextures()
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
+    cout << "gameLoaded";
 }
+
+ void Game::drawBoat(char id, int x, int y, int length, bool horizontal){
+    SDL_Color color;
+        switch (id) {
+        case '1': color = {255, 0, 0, 255}; break; 
+        case '2': color = {0, 255, 0, 255}; break; 
+        case '3': color = {0, 0, 255, 255}; break; 
+        case '4': color = {255, 255, 0, 255}; break; 
+        case '5': color = {255, 165, 0, 255}; break;
+        case '6': color = {128, 0, 128, 255}; break; 
+        default: color = {255, 255, 255, 255}; break;
+    }
+
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+    for (int i = 0; i < length; ++i) {
+        SDL_Rect rect;
+        if (horizontal) {
+            rect = {x + i * (squareSize +padding), y, squareSize, squareSize};
+        } else {
+            rect = {x, y + i * (squareSize+padding), squareSize, squareSize};
+        }
+        SDL_RenderFillRect(renderer, &rect);
+    }
+
+ }
 
 void Game::unloadGameTexture()
 {
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
+    SDL_DestroyTexture(textureBoat0);
+   
+    cout << "gameUnLoaded";
 }
 
 void Game::drawCheckerboard()
 {
-    const int ROWS = 8, COLS = 8;
-    int squareSize = 50;
 
     for (int i = 0; i < ROWS; ++i)
     {
@@ -114,6 +147,29 @@ void Game::drawCheckerboard()
         }
     }
 }
+
+void Game::displayBoat()
+{  
+     vector<BoatA::BoatInfo> boats = {
+        {'1', 0, 0, 2, true},
+        {'2', 1, 2, 3, false},
+        {'3', 4, 4, 2, true},
+        {'4', 6, 1, 3, false},
+        {'5', 3, 5, 2, true},
+        {'6', 7, 5, 3, false}
+    };
+
+    for (const auto& boat : boats) {
+        drawBoat(boat.id, offsetX + boat.x * (squareSize+padding), offsetY + boat.y * (squareSize+padding), boat.length, boat.horizontal);
+
+    for (int i = 0; i < ROWS; ++i)
+    {
+        for (int j = 0; j < COLS; ++j)
+        {
+            if (myBoat.boatList[i][j]);
+        }
+    }
+}}
 
 int Game::eventHandlerGame()
 {
@@ -133,7 +189,7 @@ int Game::eventHandlerGame()
             buttonRect = {screenWidth - 64, 24, 62, 22};
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
             {
-                return 10; 
+                return 10;
             }
         }
         else
