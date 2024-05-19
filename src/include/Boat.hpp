@@ -33,8 +33,8 @@ class Boat
 {
 
 public:
-    static const int ROWS = 8;
-    static const int COLS = 8;
+    const int ROWS = 8;
+    const int COLS = 8;
     int squareSize = 50;
     int BoatRow = 4;
     int BoatCol = 4;

@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+#include "Boat.hpp"
 
 #include "Game.hpp"
 
@@ -7,8 +8,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr)
 {
-
-    myBoat = Boat();
+    
 
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
@@ -42,6 +42,7 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
     drawCheckerboard();
+    displayBoat();
 }
 
 void Game::loadGameTextures()
@@ -94,6 +95,28 @@ void Game::loadGameTextures()
 }
 
  void Game::drawBoat(char id, int x, int y, int length, bool horizontal){
+    SDL_Color color;
+        switch (id) {
+        case '1': color = {255, 0, 0, 255}; break; 
+        case '2': color = {0, 255, 0, 255}; break; 
+        case '3': color = {0, 0, 255, 255}; break; 
+        case '4': color = {255, 255, 0, 255}; break; 
+        case '5': color = {255, 165, 0, 255}; break;
+        case '6': color = {128, 0, 128, 255}; break; 
+        default: color = {255, 255, 255, 255}; break;
+    }
+
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+    for (int i = 0; i < length; ++i) {
+        SDL_Rect rect;
+        if (horizontal) {
+            rect = {x + i * 50, y, 50, 50};
+        } else {
+            rect = {x, y + i * 50, 50, 50};
+        }
+        SDL_RenderFillRect(renderer, &rect);
+    }
 
  }
 
@@ -132,6 +155,32 @@ void Game::displayBoat()
 {
     
     const int ROWS = 8, COLS = 8;
+
+    int gridOffsetX = (screenWidth - COLS * 50) / 2;
+    int gridOffsetY = (screenHeight - ROWS * 50) / 2;
+
+       struct Boat {
+        char id;
+        int x, y;
+        int length;
+        bool horizontal;
+    };
+
+    Boat boats[] = {
+        {'1', 0, 0, 2, true},
+        {'2', 1, 2, 3, false},
+        {'3', 4, 4, 2, true},
+        {'4', 6, 1, 3, false},
+        {'5', 3, 5, 2, true},
+        {'6', 7, 6, 3, false}
+    };
+
+    for (const auto& boat : boats) {
+        drawBoat(boat.id, gridOffsetX + boat.x * 50, gridOffsetY + boat.y * 50, boat.length, boat.horizontal);
+    }
+
+
+
     for (int i = 0; i < ROWS; ++i)
     {
         for (int j = 0; j < COLS; ++j)

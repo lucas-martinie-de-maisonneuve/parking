@@ -19,12 +19,12 @@ public:
     bool gameLoaded = false;
     void displayBoat(); 
     void drawBoat(char id, int x, int y, int length, bool horizontal);
+    Boat myBoat;
     
 
 
 private:
 
-   Boat myBoat;
 
     SDL_Event eventGame;
     SDL_Renderer *renderer;
