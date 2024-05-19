@@ -61,10 +61,15 @@ int main(int argc, char *argv[])
                 menu.loadMenuItems();
                 menu.menuLoaded = true;
             }
-            if (game.gameLoaded)
+            else if (game.gameLoaded)
             {
                 game.unloadGameTexture();
                 game.gameLoaded = false;
+            }
+            else if (option.optionLoaded)
+            {
+                option.unloadOptionTextures();
+                option.optionLoaded = false;
             }
 
             menu.runMenu();
@@ -73,10 +78,19 @@ int main(int argc, char *argv[])
 
         else if (pageState == 20)
         {
+            if (!option.optionLoaded)
+            {
+                option.loadOptionTextures();
+                option.optionLoaded = true;
+            }
+            else if (menu.menuLoaded)
+            {
+                menu.unloadMenuItems();
+                menu.menuLoaded = false;
+            }
             option.displayOption();
             pageState = option.mousePositionOption();
         }
-
         SDL_RenderPresent(renderer);
 
         SDL_Delay(16);

@@ -1,8 +1,3 @@
-#include <iostream>
-#include <vector>
-using namespace std;
-
-// Load files
 #include "Option.hpp"
 
 Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
@@ -20,6 +15,36 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     {
         cerr << "Failed to load font2: " << TTF_GetError() << endl;
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+}
+
+Option::~Option()
+{
+    // Font
+    TTF_CloseFont(fontOption1);
+    TTF_CloseFont(fontOption2);
+
+    // Texture
+    unloadOptionTextures();
+
+    TTF_Quit();
+    IMG_Quit();
+}
+
+void Option::displayOption()
+{
+    // Background
+    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
+    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
+    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+
+    renderTextRules();
+    renderKeyboardDirections();
+}
+
+void Option::loadOptionTextures()
+{
 
     SDL_Surface *textSurface = TTF_RenderText_Blended(fontOption2, "Rules", {255, 255, 255, 255});
     if (!textSurface)
@@ -67,45 +92,38 @@ Option::Option(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
-
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-}
-
-Option::~Option()
-{
-    // Font
-    TTF_CloseFont(fontOption1);
-    TTF_CloseFont(fontOption2);
-
-    // Texture
-    SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(buttonTexture);
-    SDL_DestroyTexture(textTexture);
-    SDL_DestroyTexture(lineTexture);
-    SDL_DestroyTexture(textureArrow);
-
-    TTF_Quit();
-    IMG_Quit();
-}
-
-void Option::displayOption()
-{
-    // Background
-    SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
-    SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
-    SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-
     textRule();
     keyboardDirection();
 }
 
+void Option::unloadOptionTextures()
+{
+    SDL_DestroyTexture(backgroundTexture);
+    SDL_DestroyTexture(buttonTexture);
+    SDL_DestroyTexture(textTexture);
+
+    for (auto texture : lineTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+    for (auto texture : arrowTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+    for (auto texture : lineArrowTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+}
 void Option::textRule()
 {
-
-    // Transparent rect
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120);
-    SDL_RenderFillRect(renderer, &textRulesRect);
+    // Clear previous textures and rects
+    for (auto texture : lineTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+    lineTextures.clear();
+    lineRects.clear();
 
     textRulesRect = {screenWidth / 2 - 200, 150, 400, 200};
 
@@ -114,66 +132,88 @@ void Option::textRule()
         "path is clear for your boat to escape. Boats can only",
         "slide forward & backward, not sideways. May your",
         "parking skills be sharp and your maneuvers ",
-        "smooth as you navigate the waters !"
-
-    };
+        "smooth as you navigate the waters !"};
 
     int xOffset = textRulesRect.x + 25;
     int yOffset = textRulesRect.y + 20;
     for (const auto &line : lines)
     {
         SDL_Surface *lineSurface = TTF_RenderText_Blended(fontOption1, line.c_str(), {255, 255, 255, 255});
-        lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+        SDL_Texture *lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
         int lineWidth, lineHeight;
         TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
-        lineRect = {xOffset, yOffset, lineWidth, lineHeight};
-        SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
+        SDL_Rect lineRect = {xOffset, yOffset, lineWidth, lineHeight};
+
+        lineTextures.push_back(lineTexture);
+        lineRects.push_back(lineRect);
+
         SDL_FreeSurface(lineSurface);
         yOffset += lineHeight + 5;
     }
 }
 
+void Option::renderTextRules()
+{
+    // Transparent rect
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120);
+    SDL_RenderFillRect(renderer, &textRulesRect);
+
+    for (size_t i = 0; i < lineTextures.size(); ++i)
+    {
+        SDL_RenderCopy(renderer, lineTextures[i], nullptr, &lineRects[i]);
+    }
+}
+
 void Option::keyboardDirection()
 {
-
-    // Transparent rect
-    SDL_Rect transparentRectArrow = {100, 370, 400, 250};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120);
-    SDL_RenderFillRect(renderer, &transparentRectArrow);
+    // Clear previous textures and rects
+    for (auto texture : arrowTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+    arrowTextures.clear();
+    arrowRects.clear();
+    for (auto texture : lineArrowTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+    lineArrowTextures.clear();
+    lineArrowRects.clear();
 
     // Text Arrow
-
     textArrowRect = {100, 380, 400, 250};
 
     vector<string> linesArrow = {
         "move Up",
         "move Down",
         "move Left",
-        "move Right "};
+        "move Right"};
 
     int xOffset = textArrowRect.x + 130;
     int yOffset = textArrowRect.y + 12;
     for (const auto &line : linesArrow)
     {
         SDL_Surface *lineArrowSurface = TTF_RenderText_Blended(fontOption1, line.c_str(), {255, 255, 255, 255});
-        lineTexture = SDL_CreateTextureFromSurface(renderer, lineArrowSurface);
+        SDL_Texture *lineArrowTexture = SDL_CreateTextureFromSurface(renderer, lineArrowSurface);
         int lineWidth, lineHeight;
         TTF_SizeText(fontOption1, line.c_str(), &lineWidth, &lineHeight);
-        lineRect = {xOffset, yOffset, lineWidth, lineHeight};
-        SDL_RenderCopy(renderer, lineTexture, nullptr, &lineRect);
+        SDL_Rect lineArrowRect = {xOffset, yOffset, lineWidth, lineHeight};
+
+        lineArrowTextures.push_back(lineArrowTexture);
+        lineArrowRects.push_back(lineArrowRect);
+
         SDL_FreeSurface(lineArrowSurface);
         yOffset += lineHeight + 36;
     }
 
     // Arrow image
-
     vector<string> imagePaths = {"assets/img/ArrowU.png", "assets/img/ArrowD.png", "assets/img/ArrowL.png", "assets/img/ArrowR.png"};
 
-    int xPos = 385;
+    xOffset = 385;
 
     for (const auto &imagePath : imagePaths)
     {
-
         // Load image
         SDL_Surface *surfaceArrow = IMG_Load(imagePath.c_str());
         if (!surfaceArrow)
@@ -181,8 +221,8 @@ void Option::keyboardDirection()
             cerr << "Failed to load image: " << imagePath << ". Error: " << IMG_GetError() << endl;
         }
 
-        //    Texture
-        textureArrow = SDL_CreateTextureFromSurface(renderer, surfaceArrow);
+        // Texture
+        SDL_Texture *textureArrow = SDL_CreateTextureFromSurface(renderer, surfaceArrow);
         SDL_FreeSurface(surfaceArrow);
         if (!textureArrow)
         {
@@ -190,11 +230,30 @@ void Option::keyboardDirection()
         }
 
         // Position + size image
-        rectArrow = {155, xPos, 40, 40};
-        SDL_RenderCopy(renderer, textureArrow, nullptr, &rectArrow);
+        SDL_Rect rectArrow = {155, xOffset, 40, 40};
+
+        arrowTextures.push_back(textureArrow);
+        arrowRects.push_back(rectArrow);
 
         // Increment x position for next image
-        xPos += 60;
+        xOffset += 60;
+    }
+}
+
+void Option::renderKeyboardDirections()
+{
+    // Transparent rect
+    SDL_Rect transparentRectArrow = {100, 370, 400, 250};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120);
+    SDL_RenderFillRect(renderer, &transparentRectArrow);
+
+    for (size_t i = 0; i < arrowTextures.size(); ++i)
+    {
+        SDL_RenderCopy(renderer, arrowTextures[i], nullptr, &arrowRects[i]);
+    }
+    for (size_t i = 0; i < lineArrowTextures.size(); ++i)
+    {
+        SDL_RenderCopy(renderer, lineArrowTextures[i], nullptr, &lineArrowRects[i]);
     }
 }
 
