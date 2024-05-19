@@ -1,12 +1,15 @@
-#include "Game.hpp"
-// #include "Boat.hpp"
 #include <iostream>
 using namespace std;
+
+#include "Game.hpp"
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr)
 {
+
+    myBoat = Boat();
+
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
     if (!font)
     {
@@ -20,6 +23,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    myBoat.grid();
 }
 
 Game::~Game()
@@ -89,11 +93,17 @@ void Game::loadGameTextures()
     cout << "gameLoaded";
 }
 
+ void Game::drawBoat(char id, int x, int y, int length, bool horizontal){
+
+ }
+
 void Game::unloadGameTexture()
 {
     SDL_DestroyTexture(backgroundTexture);
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
+    SDL_DestroyTexture(textureBoat0);
+   
     cout << "gameUnLoaded";
 }
 
@@ -111,8 +121,29 @@ void Game::drawCheckerboard()
                              squareSize,
                              squareSize};
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 185);
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 185);
             SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+}
+
+void Game::displayBoat()
+{
+    
+    const int ROWS = 8, COLS = 8;
+    for (int i = 0; i < ROWS; ++i)
+    {
+        for (int j = 0; j < COLS; ++j)
+        {
+            if (myBoat.boatList[i][j])
+            {
+                
+            }
+
+            else {
+
+            }
         }
     }
 }
@@ -135,7 +166,7 @@ int Game::eventHandlerGame()
             buttonRect = {screenWidth - 64, 24, 62, 22};
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
             {
-                return 10; 
+                return 10;
             }
         }
         else
