@@ -7,7 +7,8 @@
 #include <iostream>
 #include "Boat.hpp"
 
-class Game {
+class Game
+{
 public:
     Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
     ~Game();
@@ -46,17 +47,9 @@ private:
     const int ROWS = 8, COLS = 8;
     int squareSize = 50;
     const int padding = 1;
-
+    void updateBoatRect();
     const int offsetX = (screenWidth - COLS * squareSize) / 2;
     const int offsetY = (screenHeight - ROWS * squareSize) / 2;
-
-    vector<BoatA::BoatInfo> boats = {
-        {'1', 0, 0, 2, true},
-        {'2', 1, 2, 3, false},
-        {'3', 4, 4, 2, true},
-        {'4', 6, 1, 3, false},
-        {'5', 3, 5, 2, false},
-        {'6', 7, 4, 3, false}};
 
     BoatA::BoatInfo *getSelectedBoat(int mouseX, int mouseY);
 };

@@ -199,18 +199,9 @@ void Game::drawCheckerboard()
 
 void Game::displayBoat()
 {
-    for (const auto &boat : boats)
+    for (const auto &boat : myBoat.boats)
     {
         drawBoat(boat.id, offsetX + boat.x * (squareSize + padding), offsetY + boat.y * (squareSize + padding), boat.length, boat.horizontal);
-
-        for (int i = 0; i < ROWS; ++i)
-        {
-            for (int j = 0; j < COLS; ++j)
-            {
-                if (myBoat.boatList[i][j])
-                    ;
-            }
-        }
     }
 }
 
