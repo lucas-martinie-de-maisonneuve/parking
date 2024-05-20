@@ -23,6 +23,7 @@ public:
     virtual void moveDown(char id) = 0;
     virtual void moveLeft(char id) = 0;
     virtual void moveRight(char id) = 0;
+
 };
 
 class Boat : public BoatA
@@ -40,6 +41,11 @@ public:
     void moveDown(char id) override;
     void moveLeft(char id) override;
     void moveRight(char id) override;
+    // bool isOccupied(int x, int y);
+
+    
+
+   
 
     BoatA::BoatInfo *getBoatAtPosition(int x, int y);
 

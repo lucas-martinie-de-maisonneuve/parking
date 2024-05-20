@@ -25,7 +25,7 @@ void Boat::moveUp(char id)
 {
     for (auto &boat : boats)
     {
-        if (boat.id == id)
+        if (boat.id == id && boat.y > 0)
         {
             boat.y -= 1;
             break;
@@ -37,7 +37,7 @@ void Boat::moveDown(char id)
 {
     for (auto &boat : boats)
     {
-        if (boat.id == id)
+            if (boat.id == id && (boat.y + boat.length - 1) < ROWS - 1)
         {
             boat.y += 1;
             break;
@@ -49,7 +49,7 @@ void Boat::moveLeft(char id)
 {
     for (auto &boat : boats)
     {
-        if (boat.id == id)
+        if (boat.id == id && boat.x > 0)
         {
             boat.x -= 1;
             break;
@@ -61,7 +61,7 @@ void Boat::moveRight(char id)
 {
     for (auto &boat : boats)
     {
-        if (boat.id == id)
+       if (boat.id == id && (boat.x + boat.length - 1) < COLS - 1)
         {
             boat.x += 1;
             break;

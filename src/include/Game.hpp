@@ -25,11 +25,13 @@ public:
     int x, y;
     std::vector<std::pair<int, int>> availableTiles;
     BoatA::BoatInfo* selectedBoat; 
+    bool isTileFree(int x, int y);
 
     // click Here
     void displayClickHere();
     bool showClickHere;
     void handleClickHere(int mouseX, int mouseY);
+
 
 private:
     SDL_Event eventGame;
