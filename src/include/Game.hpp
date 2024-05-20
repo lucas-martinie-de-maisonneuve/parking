@@ -15,12 +15,20 @@ public:
     void displayGame();
     int eventHandlerGame();
     void loadGameTextures();
-    void unloadGameTexture();
+    void unloadGameTexture();    
     void displayBoat();
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
     int checkAvailableTiles(BoatA::BoatInfo *boat, char direction);
+    void renderText(const std::string &text, int x, int y);
     bool gameLoaded = false;
+    int x, y;
+    std::vector<std::pair<int, int>> availableTiles;
+    BoatA::BoatInfo* selectedBoat; 
+
+    // click Here
+    void displayClickHere();
+    bool showClickHere;
 
 private:
     SDL_Event eventGame;
@@ -34,6 +42,7 @@ private:
     SDL_Rect buttonRect;
     SDL_Rect textRect;
     SDL_Rect rectBoat0;
+     SDL_Rect textClickRect;
 
     // Texture
     SDL_Texture *backgroundTexture;
@@ -41,7 +50,8 @@ private:
     SDL_Texture *textTexture;
     SDL_Texture *textureBoat0;
     SDL_Texture *boat_Vertical_Texture;
-    SDL_Texture *boat_Horizontal_Texture;
+    SDL_Texture *boat_Horizontal_Texture;    
+    SDL_Texture *textureClick;
 
     void drawCheckerboard();
     const int ROWS = 8, COLS = 8;

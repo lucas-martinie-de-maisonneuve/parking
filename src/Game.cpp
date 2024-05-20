@@ -6,10 +6,10 @@ using namespace std;
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
-      font(nullptr), font2(nullptr), textTexture(nullptr)
+      font(nullptr), font2(nullptr), textTexture(nullptr),  showClickHere(false)
 {
 
-    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 35);
+    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 10);
     if (!font)
     {
         cerr << "Failed to load font: " << TTF_GetError() << endl;
@@ -39,8 +39,13 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+    if (showClickHere){
+    SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
+    }
+
     drawCheckerboard();
     displayBoat();
+    displayClickHere();
 }
 
 void Game::loadGameTextures()
@@ -179,6 +184,9 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(textureBoat0);
     SDL_DestroyTexture(boat_Vertical_Texture);
     SDL_DestroyTexture(boat_Horizontal_Texture);
+    SDL_DestroyTexture(textureClick);
+
+    
 }
 
 void Game::drawCheckerboard()
@@ -315,6 +323,45 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
     return availableTiles;
 }
 
+
+
+void Game::displayClickHere()
+{
+      for (const auto &tile : availableTiles)
+    {
+        int tileX = offsetX + tile.first * (squareSize + padding);
+        int tileY = offsetY + tile.second * (squareSize + padding);
+
+        renderText("Click here", tileX, tileY);
+        SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
+    }
+  
+}
+
+
+void Game::renderText(const std::string &text, int x, int y)
+{
+    SDL_Surface *surfaceClick = TTF_RenderText_Blended(font, text.c_str(), {255, 0, 0, 255}); // Rouge pour le texte
+    if (!surfaceClick)
+    {
+        cerr << "Failed to render text: " << TTF_GetError() << endl;
+        return;
+    }
+    
+    textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
+    SDL_FreeSurface(surfaceClick);
+    if (!textureClick)
+    {
+        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
+        return;
+    }
+
+    int textWidth, textHeight;
+    TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
+    textClickRect = {x, y, textWidth, textHeight};
+}
+
+
 int Game::eventHandlerGame()
 {
     while (SDL_PollEvent(&eventGame))
@@ -343,22 +390,35 @@ int Game::eventHandlerGame()
         if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
         {
             BoatA::BoatInfo *selectedBoat = getSelectedBoat(x, y);
+            availableTiles.clear();
             if (selectedBoat)
             {
+                showClickHere = true;
+
                 cout << "Selected Boat ID: " << selectedBoat->id
                      << ", Position: (" << selectedBoat->x << ", " << selectedBoat->y << ")"
                      << ", Length: " << selectedBoat->length
                      << ", Horizontal: " << (selectedBoat->horizontal ? "Yes" : "No") << endl;
 
                 if (selectedBoat->horizontal)
+                
                 {
                     int availableLeft = checkAvailableTiles(selectedBoat, 'L');
                     int availableRight = checkAvailableTiles(selectedBoat, 'R');
 
                     cout << "Available tiles - Left: " << availableLeft
                          << ", Right: " << availableRight << endl;
-                    if (availableRight > 0)
-                        myBoat.moveRight(selectedBoat->id);
+                    // if (availableRight > 0)
+                        // myBoat.moveRight(selectedBoat->id);
+
+                         for (int i = 1; i <= availableLeft; ++i)
+                    {
+                        availableTiles.push_back({selectedBoat->x - i, selectedBoat->y});
+                    }
+                    for (int i = 1; i <= availableRight; ++i)
+                    {
+                        availableTiles.push_back({selectedBoat->x + selectedBoat->length - 1 + i, selectedBoat->y});
+                    }
                 }
                 else
                 {
@@ -367,12 +427,21 @@ int Game::eventHandlerGame()
 
                     cout << "Available tiles - Up: " << availableUp
                          << ", Down: " << availableDown << endl;
-                    if (availableDown > 0)
-                        myBoat.moveDown(selectedBoat->id);
+                   
+                      for (int i = 1; i <= availableUp; ++i)
+                    {
+                        availableTiles.push_back({selectedBoat->x, selectedBoat->y - i});
+                    }
+                    for (int i = 1; i <= availableDown; ++i)
+                    {
+                        availableTiles.push_back({selectedBoat->x, selectedBoat->y + selectedBoat->length - 1 + i});
+                    }
                 }
             }
             else
             {
+                showClickHere = false;
+
                 cout << "No boat selected at position (" << x << ", " << y << ")" << endl;
             }
         }
@@ -381,71 +450,3 @@ int Game::eventHandlerGame()
     return 0;
 }
 
-
-int Game::SpacesAroundBoat(int boatX, int boatY, int boatLength, bool horizontal)
-{
-    int emptySpacesFront = 0;
-    int emptySpacesBack = 0;
-
-    if (horizontal)
-    {
-        // left
-        for (int i = boatX - 1; i >= 0; --i)
-        {
-            if (!myBoat.boatList[boatY][i])
-            {
-                emptySpacesFront++;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        // Right
-        for (int i = boatX + boatLength; i < COLS; ++i)
-        {
-            if (!myBoat.boatList[boatY][i])
-            {
-                emptySpacesBack++;
-            }
-            else
-            {
-                break; 
-            }
-        }
-    }
-    else
-    {
-        // Top
-        for (int j = boatY - 1; j >= 0; --j)
-        {
-            if (!myBoat.boatList[j][boatX])
-            {
-                emptySpacesFront++;
-            }
-            else
-            {
-                break; 
-            }
-        }
-
-        // Bottom
-        for (int j = boatY + boatLength; j < ROWS; ++j)
-        {
-            if (!myBoat.boatList[j][boatX])
-            {
-                emptySpacesBack++;
-            }
-            else
-            {
-                break; 
-            }
-        }
-    }
-
-    cout << "Empty spaces in front: " << emptySpacesFront << endl;
-    cout << "Empty spaces behind: " << emptySpacesBack << endl;
-
-    return emptySpacesFront + emptySpacesBack;
-}
