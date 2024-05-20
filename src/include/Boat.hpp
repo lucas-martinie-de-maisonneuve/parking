@@ -18,6 +18,7 @@ public:
     };
 
     virtual ~BoatA() = default;
+    
     virtual void moveUp(char id) = 0;
     virtual void moveDown(char id) = 0;
     virtual void moveLeft(char id) = 0;
@@ -32,8 +33,6 @@ public:
     int squareSize = 50;
     int BoatRow = 4;
     int BoatCol = 4;
-
-    vector<vector<int>> boatList;
 
     Boat();
     ~Boat();

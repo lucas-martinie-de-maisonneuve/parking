@@ -2,11 +2,9 @@
 #include "Boat.hpp"
 using namespace std;
 
-vector<vector<int>> boatList(8, vector<int>(8, false));
 
-Boat::Boat() : boatList(ROWS, vector<int>(COLS, 0)), BoatRow(1), BoatCol(2)
+Boat::Boat() : BoatRow(1), BoatCol(2)
 {
-    boatList[BoatRow][BoatCol] = 1; // Example initialization, adjust as necessary
 
     // Initialize boats
     boats = {
@@ -17,23 +15,6 @@ Boat::Boat() : boatList(ROWS, vector<int>(COLS, 0)), BoatRow(1), BoatCol(2)
         {'5', 3, 5, 2, false},
         {'6', 7, 4, 3, false}};
 
-    for (const auto &boat : boats)
-    {
-        if (boat.horizontal)
-        {
-            for (int i = 0; i < boat.length; ++i)
-            {
-                boatList[boat.y][boat.x + i] = 1; // Mark horizontal boat positions
-            }
-        }
-        else
-        {
-            for (int i = 0; i < boat.length; ++i)
-            {
-                boatList[boat.y + i][boat.x] = 1; // Mark vertical boat positions
-            }
-        }
-    }
 }
 
 Boat::~Boat()
@@ -82,10 +63,7 @@ void Boat::moveRight(char id)
     {
         if (boat.id == id)
         {
-            cout << boat.x << "  " << boat.y << endl;
             boat.x += 1;
-            cout << boat.x << "  " << boat.y << endl;
-
             break;
         }
     }

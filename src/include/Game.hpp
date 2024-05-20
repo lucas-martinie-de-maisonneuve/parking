@@ -46,8 +46,9 @@ private:
     void drawCheckerboard();
     const int ROWS = 8, COLS = 8;
     int squareSize = 50;
+    
     const int padding = 1;
-    void updateBoatRect();
+
     const int offsetX = (screenWidth - COLS * squareSize) / 2;
     const int offsetY = (screenHeight - ROWS * squareSize) / 2;
 

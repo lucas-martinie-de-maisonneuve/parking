@@ -207,11 +207,9 @@ void Game::displayBoat()
 
 BoatA::BoatInfo *Game::getSelectedBoat(int mouseX, int mouseY)
 {
-    // Convert screen coordinates to grid coordinates
     int gridX = (mouseX - offsetX) / (squareSize + padding);
     int gridY = (mouseY - offsetY) / (squareSize + padding);
 
-    // Check if click is within the bounds of the grid
     if (gridX >= 0 && gridX < COLS && gridY >= 0 && gridY < ROWS)
     {
         return myBoat.getBoatAtPosition(gridX, gridY);
@@ -225,7 +223,6 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
 
     auto isOccupied = [&](int row, int col) -> bool
     {
-        // Iterate through all boats to see if any occupy the given cell
         for (const auto &otherBoat : myBoat.boats)
         {
             if (otherBoat.horizontal)
@@ -259,7 +256,7 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
                 }
                 else
                 {
-                    break; // Stop counting if another boat is encountered
+                    break;
                 }
             }
         }
@@ -274,7 +271,7 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
                 }
                 else
                 {
-                    break; // Stop counting if another boat is encountered
+                    break;
                 }
             }
         }
@@ -292,7 +289,7 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
                 }
                 else
                 {
-                    break; // Stop counting if another boat is encountered
+                    break;
                 }
             }
         }
@@ -307,7 +304,7 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
                 }
                 else
                 {
-                    break; // Stop counting if another boat is encountered
+                    break;
                 }
             }
         }
@@ -361,7 +358,6 @@ int Game::eventHandlerGame()
                          << ", Right: " << availableRight << endl;
                     if (availableRight > 0)
                         myBoat.moveRight(selectedBoat->id);
-                    // Optionally, you can add additional logic here to handle the boat movement
                 }
                 else
                 {
@@ -372,7 +368,6 @@ int Game::eventHandlerGame()
                          << ", Down: " << availableDown << endl;
                     if (availableDown > 0)
                         myBoat.moveDown(selectedBoat->id);
-                    // Optionally, you can add additional logic here to handle the boat movement
                 }
             }
             else
