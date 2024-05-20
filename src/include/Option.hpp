@@ -45,14 +45,14 @@ private:
     SDL_Texture *textTexture;
 
     // Textures and rects for rules
-    std::vector<SDL_Texture*> lineTextures;
-    std::vector<SDL_Rect> lineRects;
+    vector<SDL_Texture*> lineTextures;
+    vector<SDL_Rect> lineRects;
 
     // Textures and rects for keyboard directions
-    std::vector<SDL_Texture*> arrowTextures;
-    std::vector<SDL_Rect> arrowRects;
-    std::vector<SDL_Texture*> lineArrowTextures;
-    std::vector<SDL_Rect> lineArrowRects;
+    vector<SDL_Texture*> arrowTextures;
+    vector<SDL_Rect> arrowRects;
+    vector<SDL_Texture*> lineArrowTextures;
+    vector<SDL_Rect> lineArrowRects;
 };
 
 #endif
