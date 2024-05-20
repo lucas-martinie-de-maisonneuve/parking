@@ -29,6 +29,7 @@ public:
     // click Here
     void displayClickHere();
     bool showClickHere;
+    void handleClickHere(int mouseX, int mouseY);
 
 private:
     SDL_Event eventGame;

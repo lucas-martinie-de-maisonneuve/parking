@@ -40,6 +40,7 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
     if (showClickHere){
+
     SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
     }
 
@@ -360,8 +361,6 @@ void Game::renderText(const std::string &text, int x, int y)
     TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
     textClickRect = {x, y, textWidth, textHeight};
 }
-
-
 int Game::eventHandlerGame()
 {
     while (SDL_PollEvent(&eventGame))
@@ -389,29 +388,25 @@ int Game::eventHandlerGame()
 
         if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
         {
-            BoatA::BoatInfo *selectedBoat = getSelectedBoat(x, y);
+            // Handle "Click here" clicks
+            if (showClickHere)
+            {
+                handleClickHere(x, y);
+            }
+
+            // Handle boat selection
+            selectedBoat = getSelectedBoat(x, y);
             availableTiles.clear();
             if (selectedBoat)
             {
                 showClickHere = true;
 
-                cout << "Selected Boat ID: " << selectedBoat->id
-                     << ", Position: (" << selectedBoat->x << ", " << selectedBoat->y << ")"
-                     << ", Length: " << selectedBoat->length
-                     << ", Horizontal: " << (selectedBoat->horizontal ? "Yes" : "No") << endl;
-
                 if (selectedBoat->horizontal)
-                
                 {
                     int availableLeft = checkAvailableTiles(selectedBoat, 'L');
                     int availableRight = checkAvailableTiles(selectedBoat, 'R');
 
-                    cout << "Available tiles - Left: " << availableLeft
-                         << ", Right: " << availableRight << endl;
-                    // if (availableRight > 0)
-                        // myBoat.moveRight(selectedBoat->id);
-
-                         for (int i = 1; i <= availableLeft; ++i)
+                    for (int i = 1; i <= availableLeft; ++i)
                     {
                         availableTiles.push_back({selectedBoat->x - i, selectedBoat->y});
                     }
@@ -425,10 +420,7 @@ int Game::eventHandlerGame()
                     int availableUp = checkAvailableTiles(selectedBoat, 'U');
                     int availableDown = checkAvailableTiles(selectedBoat, 'D');
 
-                    cout << "Available tiles - Up: " << availableUp
-                         << ", Down: " << availableDown << endl;
-                   
-                      for (int i = 1; i <= availableUp; ++i)
+                    for (int i = 1; i <= availableUp; ++i)
                     {
                         availableTiles.push_back({selectedBoat->x, selectedBoat->y - i});
                     }
@@ -441,8 +433,6 @@ int Game::eventHandlerGame()
             else
             {
                 showClickHere = false;
-
-                cout << "No boat selected at position (" << x << ", " << y << ")" << endl;
             }
         }
     }
@@ -450,3 +440,45 @@ int Game::eventHandlerGame()
     return 0;
 }
 
+void Game::handleClickHere(int mouseX, int mouseY)
+{
+    int gridX = (mouseX - offsetX) / (squareSize + padding);
+    int gridY = (mouseY - offsetY) / (squareSize + padding);
+
+    for (const auto &tile : availableTiles)
+    {
+        if (tile.first == gridX && tile.second == gridY)
+        {
+            if (selectedBoat)
+            {
+                if (selectedBoat->horizontal)
+                {
+                    if (gridX < selectedBoat->x) // Move left
+                    {
+                        myBoat.moveLeft(selectedBoat->id);
+                    }
+                    else // Move right
+                    {
+                        myBoat.moveRight(selectedBoat->id);
+                    }
+                }
+                else
+                {
+                    if (gridY < selectedBoat->y) // Move up
+                    {
+                        myBoat.moveUp(selectedBoat->id);
+                    }
+                    else // Move down
+                    {
+                        myBoat.moveDown(selectedBoat->id);
+                    }
+                }
+                // Update the available tiles after moving
+                availableTiles.clear();
+                selectedBoat = nullptr;
+                showClickHere = false;
+            }
+            break;
+        }
+    }
+}
