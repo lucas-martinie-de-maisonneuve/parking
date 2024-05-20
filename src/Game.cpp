@@ -493,55 +493,68 @@ int Game::eventHandlerGame()
 //     }
 // }
 
-
-
-
 void Game::handleClickHere(int mouseX, int mouseY)
 {
     int gridX = (mouseX - offsetX) / (squareSize + padding);
     int gridY = (mouseY - offsetY) / (squareSize + padding);
 
-    if (selectedBoat)
+    // Vérifier si le clic est sur une case "click here"
+    for (const auto &tile : availableTiles)
     {
-        int boatX = selectedBoat->x;
-        int boatY = selectedBoat->y;
-
-        // Déplacement horizontal
-        if (selectedBoat->horizontal)
+        if (tile.first == gridX && tile.second == gridY)
         {
-            // Déplacer vers la droite
-            while (boatX < gridX && boatX + 1 < 7)
+            if (selectedBoat)
             {
-                myBoat.moveRight(selectedBoat->id);
-                boatX++;
-            }
-            // Déplacer vers la gauche
-            while (boatX > gridX && boatX - 1 >= 0)
-            {
-                myBoat.moveLeft(selectedBoat->id);
-                boatX--;
-            }
-        }
-        // Déplacement vertical
-        else
-        {
-            // Déplacer vers le bas
-            while (boatY < gridY && boatY + 1 < 7)
-            {
-                myBoat.moveDown(selectedBoat->id);
-                boatY++;
-            }
-            // Déplacer vers le haut
-            while (boatY > gridY && boatY - 1 >= 0)
-            {
-                myBoat.moveUp(selectedBoat->id);
-                boatY--;
-            }
-        }
+                int boatX = selectedBoat->x;
+                int boatY = selectedBoat->y;
 
-        // Mettre à jour les tuiles disponibles après le déplacement
-        availableTiles.clear();
-        selectedBoat = nullptr;
-        showClickHere = false;
+                // Déplacement horizontal
+                if (selectedBoat->horizontal)
+                {
+                    if (gridX < boatX) // Déplacer vers la gauche
+                    {
+                        while (boatX > gridX && boatX - 1 >= 0)
+                        {
+                            myBoat.moveLeft(selectedBoat->id);
+                            boatX--;
+                        }
+                    }
+                    else // Déplacer vers la droite
+                    {
+                        while (boatX < gridX && boatX + 1 < 7)
+                        {
+                            myBoat.moveRight(selectedBoat->id);
+                            boatX++;
+                        }
+                    }
+                }
+                // Déplacement vertical
+                else
+                {
+                    if (gridY < boatY) // Déplacer vers le haut
+                    {
+                        while (boatY > gridY && boatY - 1 >= 0)
+                        {
+                            myBoat.moveUp(selectedBoat->id);
+                            boatY--;
+                        }
+                    }
+                    else // Déplacer vers le bas
+                    {
+                        while (boatY < gridY && boatY + 1 < 7)
+                        {
+                            myBoat.moveDown(selectedBoat->id);
+                            boatY++;
+                        }
+                    }
+                }
+
+                // Mettre à jour les tuiles disponibles après le déplacement
+                availableTiles.clear();
+                selectedBoat = nullptr;
+                showClickHere = false;
+            }
+            break;
+        }
     }
 }
