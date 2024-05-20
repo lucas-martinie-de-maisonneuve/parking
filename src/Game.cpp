@@ -1,8 +1,9 @@
 #include <iostream>
-using namespace std;
 #include "Boat.hpp"
 
 #include "Game.hpp"
+using namespace std;
+
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
@@ -91,7 +92,7 @@ void Game::loadGameTextures()
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
-    cout << "gameLoaded";
+    cout << "gameLoaded" << endl;
 }
 
  void Game::drawBoat(char id, int x, int y, int length, bool horizontal){
@@ -150,7 +151,7 @@ void Game::drawCheckerboard()
 
 void Game::displayBoat()
 {  
-     vector<BoatA::BoatInfo> boats = {
+    boats = {
         {'1', 0, 0, 2, true},
         {'2', 1, 2, 3, false},
         {'3', 4, 4, 2, true},
@@ -171,6 +172,44 @@ void Game::displayBoat()
     }
 }}
 
+BoatA::BoatInfo* Game::getBoatAt(int mouseX, int mouseY) {
+    for (auto& boat : boats) {
+        int boatX = offsetX + boat.x * (squareSize + padding);
+        int boatY = offsetY + boat.y * (squareSize + padding);
+        int boatWidth = boat.horizontal ? boat.length * (squareSize + padding) : squareSize;
+        int boatHeight = boat.horizontal ? squareSize : boat.length * (squareSize + padding);
+
+        if (mouseX >= boatX && mouseX <= boatX + boatWidth &&
+            mouseY >= boatY && mouseY <= boatY + boatHeight) {
+            cout << "Id: "<< boat.id<< endl;
+            cout << "X : " << boat.x << endl; 
+            cout << "Y : " << boat.y << endl;   
+            cout << "Horizontal " << boat.horizontal << endl;  
+
+            return &boat;
+        }
+    }
+    return nullptr;
+}
+
+void Game::handleMouseEvents() {
+
+    
+
+    if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT) {
+        BoatA::BoatInfo* selectedBoat = getBoatAt(x, y);
+        if (selectedBoat && selectedBoat->horizontal) {
+            int emptySpaces = SpacesAroundBoat(selectedBoat->x, selectedBoat->y, selectedBoat->length, selectedBoat->horizontal);
+            if (emptySpaces > 0) {
+                // selectedBoat-> moveRight();
+            }
+        }
+    }
+}
+
+    
+
+
 int Game::eventHandlerGame()
 {
     while (SDL_PollEvent(&eventGame))
@@ -180,7 +219,6 @@ int Game::eventHandlerGame()
             return -1;
         }
 
-        int x, y;
         SDL_GetMouseState(&x, &y);
 
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
@@ -196,6 +234,78 @@ int Game::eventHandlerGame()
         {
             buttonRect = {screenWidth - 60, 25, 60, 20};
         }
+
+        handleMouseEvents();  
+
     }
     return 0;
+}
+
+
+int Game::SpacesAroundBoat(int boatX, int boatY, int boatLength, bool horizontal)
+{
+    int emptySpacesFront = 0;
+    int emptySpacesBack = 0;
+
+    if (horizontal)
+    {
+        // left
+        for (int i = boatX - 1; i >= 0; --i)
+        {
+            if (!myBoat.boatList[boatY][i])
+            {
+                emptySpacesFront++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        // Right
+        for (int i = boatX + boatLength; i < COLS; ++i)
+        {
+            if (!myBoat.boatList[boatY][i])
+            {
+                emptySpacesBack++;
+            }
+            else
+            {
+                break; 
+            }
+        }
+    }
+    else
+    {
+        // Top
+        for (int j = boatY - 1; j >= 0; --j)
+        {
+            if (!myBoat.boatList[j][boatX])
+            {
+                emptySpacesFront++;
+            }
+            else
+            {
+                break; 
+            }
+        }
+
+        // Bottom
+        for (int j = boatY + boatLength; j < ROWS; ++j)
+        {
+            if (!myBoat.boatList[j][boatX])
+            {
+                emptySpacesBack++;
+            }
+            else
+            {
+                break; 
+            }
+        }
+    }
+
+    cout << "Empty spaces in front: " << emptySpacesFront << endl;
+    cout << "Empty spaces behind: " << emptySpacesBack << endl;
+
+    return emptySpacesFront + emptySpacesBack;
 }

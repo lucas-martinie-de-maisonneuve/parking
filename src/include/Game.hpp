@@ -20,6 +20,20 @@ public:
     void displayBoat();
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
+    vector<BoatA::BoatInfo> boats;
+
+    BoatA::BoatInfo *getBoatAt(int mouseX, int mouseY);
+    void handleMouseEvents();
+
+    int SpacesAroundBoat(int boatX, int boatY, int boatLength, bool horizontal);
+
+    int x, y;
+    const int ROWS = 8, COLS = 8;
+
+
+
+    
+
 
 private:
     SDL_Event eventGame;
@@ -42,13 +56,12 @@ private:
 
     void drawCheckerboard();
 
-    const int ROWS = 8, COLS = 8;
+
     int squareSize = 50;
     const int padding = 1;
 
     const int offsetX = (screenWidth - COLS * squareSize) / 2;
     const int offsetY = (screenHeight - ROWS * squareSize) / 2;
-    
 };
 
 #endif

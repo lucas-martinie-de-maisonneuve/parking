@@ -17,6 +17,8 @@ Boat::~Boat()
 {
 }
 
+
+
 void Boat::grid()
 {
 
@@ -122,3 +124,5 @@ bool Boat::checkNeighbour(int row, int col, int distance, char direction)
 
     return false;
 }
+
+

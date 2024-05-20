@@ -20,27 +20,33 @@ public:
 
     int GridSize = 8;
 
-    // BoatA(char id, int x, int y, int length, bool horizontal)
-    //     : id(id), x(x), y(y), length(length), horizontal(horizontal) {}
-
     virtual bool move(char direction, char grid[8][8]) = 0;
 
     virtual ~BoatA() = default;
 };
 
-
 class Boat
 {
 
-public:
-    const int ROWS = 8;
+    struct BoatInfo {
+        char id;
+        int x, y;
+        int length;
+        bool horizontal;
+
+        
+void moveRight() {
+            x++;  // Move right by incrementing the x-coordinate
+        }
+    };
+
+    public : const int ROWS = 8;
     const int COLS = 8;
     int squareSize = 50;
     int BoatRow = 4;
     int BoatCol = 4;
 
-   vector<vector<int>> boatList;
-    // vector<BoatA::Boat> boats;
+    vector<vector<int>> boatList;
 
     Boat();
     ~Boat();
@@ -51,6 +57,7 @@ public:
     int moveD();
     int moveR();
     int moveL();
+
 };
 
 #endif // BOAT_HPP
