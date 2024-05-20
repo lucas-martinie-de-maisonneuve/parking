@@ -3,7 +3,6 @@
 #include "Game.hpp"
 using namespace std;
 
-
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
       font(nullptr), font2(nullptr), textTexture(nullptr),  showClickHere(false)
@@ -99,6 +98,7 @@ void Game::loadGameTextures()
 
     SDL_SetTextureBlendMode(boat_Vertical_Texture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(boat_Horizontal_Texture, SDL_BLENDMODE_BLEND);
+
     // Load boat textures
     SDL_Surface *boat_Vertical_Surface = IMG_Load("assets/img/boat_v.png");
     if (!boat_Vertical_Surface)
@@ -185,9 +185,7 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(textureBoat0);
     SDL_DestroyTexture(boat_Vertical_Texture);
     SDL_DestroyTexture(boat_Horizontal_Texture);
-    SDL_DestroyTexture(textureClick);
-
-    
+    SDL_DestroyTexture(textureClick);    
 }
 
 void Game::drawCheckerboard()
@@ -325,7 +323,6 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
 }
 
 
-
 void Game::displayClickHere()
 {
       for (const auto &tile : availableTiles)
@@ -335,8 +332,7 @@ void Game::displayClickHere()
 
         renderText("Click here", tileX, tileY);
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
-    }
-  
+    }  
 }
 
 
@@ -347,8 +343,7 @@ void Game::renderText(const std::string &text, int x, int y)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
         return;
-    }
-    
+    }    
     textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
     SDL_FreeSurface(surfaceClick);
     if (!textureClick)
@@ -356,7 +351,6 @@ void Game::renderText(const std::string &text, int x, int y)
         cerr << "Failed to create text texture: " << SDL_GetError() << endl;
         return;
     }
-
     int textWidth, textHeight;
     TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
     textClickRect = {x, y, textWidth, textHeight};
@@ -371,7 +365,6 @@ int Game::eventHandlerGame()
         {
             return -1;
         }
-
         SDL_GetMouseState(&x, &y);
 
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
@@ -387,7 +380,6 @@ int Game::eventHandlerGame()
         {
             buttonRect = {screenWidth - 60, 25, 60, 20};
         }
-
         if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
         {
             // Handle "Click here" clicks
@@ -422,7 +414,6 @@ int Game::eventHandlerGame()
                 {
                     int availableUp = checkAvailableTiles(selectedBoat, 'U');
                     int availableDown = checkAvailableTiles(selectedBoat, 'D');
-
                     for (int i = 1; i <= availableUp; ++i)
                     {
                         availableTiles.push_back({selectedBoat->x, selectedBoat->y - i});
@@ -443,62 +434,11 @@ int Game::eventHandlerGame()
     return 0;
 }
 
-
-// void Game::handleClickHere(int mouseX, int mouseY)
-// {
-//     int gridX = (mouseX - offsetX) / (squareSize + padding);
-//     int gridY = (mouseY - offsetY) / (squareSize + padding);
-
-//     for (const auto &tile : availableTiles)
-//     {
-//         if (tile.first == gridX && tile.second == gridY)
-//         {
-
-//             showClickHere = true;
-//             if (selectedBoat)
-//             {
-               
-//                 if (selectedBoat->horizontal)
-//                 {
-//                     if (gridX < selectedBoat->x) // Move left
-//                     {
-//                         myBoat.moveLeft(selectedBoat->id);
-                      
-//                     }
-//                     else // Move right
-//                     {
-//                         myBoat.moveRight(selectedBoat->id);
-                        
-//                     }
-//                 }
-//                 else
-//                 {
-//                     if (gridY < selectedBoat->y) // Move up
-//                     {
-//                         myBoat.moveUp(selectedBoat->id);
-//                     }
-//                     else // Move down
-//                     {
-//                         myBoat.moveDown(selectedBoat->id);
-//                     }
-//                 }
-//                 // Update the available tiles after moving
-//                 availableTiles.clear();
-//                 selectedBoat = nullptr;
-//                     showClickHere = false;
-      
-//             }
-//             break;
-//         }
-//     }
-// }
-
 void Game::handleClickHere(int mouseX, int mouseY)
 {
     int gridX = (mouseX - offsetX) / (squareSize + padding);
     int gridY = (mouseY - offsetY) / (squareSize + padding);
 
-    // Vérifier si le clic est sur une case "click here"
     for (const auto &tile : availableTiles)
     {
         if (tile.first == gridX && tile.second == gridY)
@@ -507,11 +447,10 @@ void Game::handleClickHere(int mouseX, int mouseY)
             {
                 int boatX = selectedBoat->x;
                 int boatY = selectedBoat->y;
-
-                // Déplacement horizontal
+           
                 if (selectedBoat->horizontal)
                 {
-                    if (gridX < boatX) // Déplacer vers la gauche
+                    if (gridX < boatX)
                     {
                         while (boatX > gridX && boatX - 1 >= 0)
                         {
@@ -519,7 +458,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatX--;
                         }
                     }
-                    else // Déplacer vers la droite
+                    else 
                     {
                         while (boatX < gridX && boatX + 1 < 7)
                         {
@@ -528,10 +467,9 @@ void Game::handleClickHere(int mouseX, int mouseY)
                         }
                     }
                 }
-                // Déplacement vertical
                 else
                 {
-                    if (gridY < boatY) // Déplacer vers le haut
+                    if (gridY < boatY)
                     {
                         while (boatY > gridY && boatY - 1 >= 0)
                         {
@@ -539,7 +477,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatY--;
                         }
                     }
-                    else // Déplacer vers le bas
+                    else 
                     {
                         while (boatY < gridY && boatY + 1 < 7)
                         {
@@ -547,9 +485,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatY++;
                         }
                     }
-                }
-
-                // Mettre à jour les tuiles disponibles après le déplacement
+                }            
                 availableTiles.clear();
                 selectedBoat = nullptr;
                 showClickHere = false;

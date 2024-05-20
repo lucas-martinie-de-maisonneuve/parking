@@ -11,19 +11,18 @@ class BoatA
 public:
     struct BoatInfo
     {
-        char id; // 1 to 6
+        char id;
         int x, y;
-        int length;      // 2 or 3
-        bool horizontal; // true = H, false = V
+        int length;
+        bool horizontal;
     };
 
     virtual ~BoatA() = default;
-    
+        
     virtual void moveUp(char id) = 0;
     virtual void moveDown(char id) = 0;
     virtual void moveLeft(char id) = 0;
     virtual void moveRight(char id) = 0;
-
 };
 
 class Boat : public BoatA
@@ -41,11 +40,7 @@ public:
     void moveDown(char id) override;
     void moveLeft(char id) override;
     void moveRight(char id) override;
-    // bool isOccupied(int x, int y);
-
-    
-
-   
+    bool isPositionOccupied(int x, int y, char id) const;
 
     BoatA::BoatInfo *getBoatAtPosition(int x, int y);
 
