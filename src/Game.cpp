@@ -1,7 +1,5 @@
 #include <iostream>
-using namespace std;
 #include "Boat.hpp"
-
 #include "Game.hpp"
 
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
@@ -22,7 +20,6 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-    myBoat.grid();
 }
 
 Game::~Game()
@@ -151,7 +148,7 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         break;
     }
 
-    SDL_Texture* texture = horizontal ? boat_Horizontal_Texture : boat_Vertical_Texture;
+    SDL_Texture *texture = horizontal ? boat_Horizontal_Texture : boat_Vertical_Texture;
 
     SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
     SDL_SetTextureAlphaMod(texture, color.a);
@@ -168,7 +165,6 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
 
     SDL_RenderCopy(renderer, texture, nullptr, &rect);
 
-    // Réinitialiser les modulations de couleur et d'alpha après le rendu
     SDL_SetTextureColorMod(texture, 255, 255, 255);
     SDL_SetTextureAlphaMod(texture, 255);
 }
@@ -218,6 +214,117 @@ void Game::displayBoat()
     }
 }
 
+BoatA::BoatInfo *Game::getSelectedBoat(int mouseX, int mouseY)
+{
+    // Convert screen coordinates to grid coordinates
+    int gridX = (mouseX - offsetX) / (squareSize + padding);
+    int gridY = (mouseY - offsetY) / (squareSize + padding);
+
+    // Check if click is within the bounds of the grid
+    if (gridX >= 0 && gridX < COLS && gridY >= 0 && gridY < ROWS)
+    {
+        return myBoat.getBoatAtPosition(gridX, gridY);
+    }
+    return nullptr;
+}
+
+int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
+{
+    int availableTiles = 0;
+
+    auto isOccupied = [&](int row, int col) -> bool
+    {
+        // Iterate through all boats to see if any occupy the given cell
+        for (const auto &otherBoat : myBoat.boats)
+        {
+            if (otherBoat.horizontal)
+            {
+                if (row == otherBoat.y && col >= otherBoat.x && col < otherBoat.x + otherBoat.length)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (col == otherBoat.x && row >= otherBoat.y && row < otherBoat.y + otherBoat.length)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    if (boat->horizontal)
+    {
+        if (direction == 'L')
+        {
+            // Check tiles to the left of the boat
+            for (int col = boat->x - 1; col >= 0; --col)
+            {
+                if (!isOccupied(boat->y, col))
+                {
+                    ++availableTiles;
+                }
+                else
+                {
+                    break; // Stop counting if another boat is encountered
+                }
+            }
+        }
+        else if (direction == 'R')
+        {
+            // Check tiles to the right of the boat
+            for (int col = boat->x + boat->length; col < COLS; ++col)
+            {
+                if (!isOccupied(boat->y, col))
+                {
+                    ++availableTiles;
+                }
+                else
+                {
+                    break; // Stop counting if another boat is encountered
+                }
+            }
+        }
+    }
+    else
+    {
+        if (direction == 'U')
+        {
+            // Check tiles above the boat
+            for (int row = boat->y - 1; row >= 0; --row)
+            {
+                if (!isOccupied(row, boat->x))
+                {
+                    ++availableTiles;
+                }
+                else
+                {
+                    break; // Stop counting if another boat is encountered
+                }
+            }
+        }
+        else if (direction == 'D')
+        {
+            // Check tiles below the boat
+            for (int row = boat->y + boat->length; row < ROWS; ++row)
+            {
+                if (!isOccupied(row, boat->x))
+                {
+                    ++availableTiles;
+                }
+                else
+                {
+                    break; // Stop counting if another boat is encountered
+                }
+            }
+        }
+    }
+
+    return availableTiles;
+}
+
 int Game::eventHandlerGame()
 {
     while (SDL_PollEvent(&eventGame))
@@ -243,6 +350,46 @@ int Game::eventHandlerGame()
         {
             buttonRect = {screenWidth - 60, 25, 60, 20};
         }
+
+        if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
+        {
+            BoatA::BoatInfo *selectedBoat = getSelectedBoat(x, y);
+            if (selectedBoat)
+            {
+                cout << "Selected Boat ID: " << selectedBoat->id
+                     << ", Position: (" << selectedBoat->x << ", " << selectedBoat->y << ")"
+                     << ", Length: " << selectedBoat->length
+                     << ", Horizontal: " << (selectedBoat->horizontal ? "Yes" : "No") << endl;
+
+                if (selectedBoat->horizontal)
+                {
+                    int availableLeft = checkAvailableTiles(selectedBoat, 'L');
+                    int availableRight = checkAvailableTiles(selectedBoat, 'R');
+
+                    cout << "Available tiles - Left: " << availableLeft
+                         << ", Right: " << availableRight << endl;
+                    if (availableRight > 0)
+                        myBoat.moveRight(selectedBoat->id);
+                    // Optionally, you can add additional logic here to handle the boat movement
+                }
+                else
+                {
+                    int availableUp = checkAvailableTiles(selectedBoat, 'U');
+                    int availableDown = checkAvailableTiles(selectedBoat, 'D');
+
+                    cout << "Available tiles - Up: " << availableUp
+                         << ", Down: " << availableDown << endl;
+                    if (availableDown > 0)
+                        myBoat.moveDown(selectedBoat->id);
+                    // Optionally, you can add additional logic here to handle the boat movement
+                }
+            }
+            else
+            {
+                cout << "No boat selected at position (" << x << ", " << y << ")" << endl;
+            }
+        }
     }
+
     return 0;
 }

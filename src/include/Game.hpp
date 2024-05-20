@@ -7,8 +7,7 @@
 #include <iostream>
 #include "Boat.hpp"
 
-class Game
-{
+class Game {
 public:
     Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight);
     ~Game();
@@ -16,10 +15,11 @@ public:
     int eventHandlerGame();
     void loadGameTextures();
     void unloadGameTexture();
-    bool gameLoaded = false;
     void displayBoat();
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
+    int checkAvailableTiles(BoatA::BoatInfo *boat, char direction);
+    bool gameLoaded = false;
 
 private:
     SDL_Event eventGame;
@@ -39,11 +39,10 @@ private:
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
     SDL_Texture *textureBoat0;
-    SDL_Texture * boat_Vertical_Texture;
-    SDL_Texture * boat_Horizontal_Texture;
+    SDL_Texture *boat_Vertical_Texture;
+    SDL_Texture *boat_Horizontal_Texture;
 
     void drawCheckerboard();
-
     const int ROWS = 8, COLS = 8;
     int squareSize = 50;
     const int padding = 1;
@@ -58,6 +57,8 @@ private:
         {'4', 6, 1, 3, false},
         {'5', 3, 5, 2, false},
         {'6', 7, 4, 3, false}};
+
+    BoatA::BoatInfo *getSelectedBoat(int mouseX, int mouseY);
 };
 
-#endif
+#endif // GAME_HPP
