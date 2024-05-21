@@ -38,6 +38,8 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
+    SDL_RenderCopy(renderer, textureFinishLine , nullptr, & rectFinishLine );
+
     if (showClickHere)
     {
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
@@ -54,7 +56,7 @@ void Game::displayGame()
 
 void Game::loadGameTextures()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Jeu du parking", {150, 27, 0, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Boat parking", {255, 255, 255, 255});
     if (!textSurface)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
@@ -68,7 +70,7 @@ void Game::loadGameTextures()
     }
 
     int textWidth, textHeight;
-    TTF_SizeText(font2, "Jeu du parking", &textWidth, &textHeight);
+    TTF_SizeText(font2, "Boat parking", &textWidth, &textHeight);
     textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
 
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/BackgrounGame.png");
@@ -160,6 +162,24 @@ void Game::loadGameTextures()
         cerr << "Failed to create text texture: " << SDL_GetError() << endl;
         return;
     }
+
+    // Load finish line
+
+    SDL_Surface* surfaceFinishLine = IMG_Load("assets/img/finishLine.png");
+    if (!surfaceFinishLine ) {
+        cerr << "Failed to load image: " << surfaceFinishLine  << ". Error: " << IMG_GetError() << endl;
+    }
+
+    // Create texture from surface
+    textureFinishLine  = SDL_CreateTextureFromSurface(renderer, surfaceFinishLine );
+    SDL_FreeSurface(surfaceFinishLine);
+    if (!textureFinishLine) {
+        cerr << "Failed to create texture from image: " << textureFinishLine << ". Error: " << SDL_GetError() << endl;
+       
+    }
+    rectFinishLine  = {505, 300, 40, 100};
+    
+    
 }
 
 void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
@@ -221,6 +241,7 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(boat_Horizontal_Texture);
     SDL_DestroyTexture(textureClick);
     SDL_DestroyTexture(winTexture);
+    SDL_DestroyTexture(textureFinishLine);
 }
 
 void Game::drawCheckerboard()

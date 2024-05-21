@@ -46,6 +46,7 @@ private:
     SDL_Rect rectBoat0;
     SDL_Rect textClickRect;
     SDL_Rect winRect;
+    SDL_Rect rectFinishLine;
 
     // Texture
     SDL_Texture *backgroundTexture;
@@ -56,6 +57,7 @@ private:
     SDL_Texture *boat_Horizontal_Texture;
     SDL_Texture *textureClick;
     SDL_Texture *winTexture;
+    SDL_Texture* textureFinishLine;
 
     void drawCheckerboard();
     const int ROWS = 8, COLS = 8;
