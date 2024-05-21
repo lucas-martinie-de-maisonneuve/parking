@@ -3,10 +3,9 @@
 #include "Game.hpp"
 using namespace std;
 
-
 Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
     : renderer(_renderer), screenWidth(screenWidth), screenHeight(screenHeight),
-      font(nullptr), font2(nullptr), textTexture(nullptr),  showClickHere(false)
+      font(nullptr), font2(nullptr), textTexture(nullptr), showClickHere(false)
 {
 
     font = TTF_OpenFont("assets/fonts/Coffee.ttf", 10);
@@ -39,14 +38,18 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-    if (showClickHere){
-
-    SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
+    if (showClickHere)
+    {
+        SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
     }
 
     drawCheckerboard();
     displayBoat();
-    displayClickHere();
+
+    if (myBoat.gameOver)
+        SDL_RenderCopy(renderer, winTexture, nullptr, &winRect);
+    else
+        displayClickHere();
 }
 
 void Game::loadGameTextures()
@@ -95,10 +98,10 @@ void Game::loadGameTextures()
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
-    cout << "gameLoaded";
 
     SDL_SetTextureBlendMode(boat_Vertical_Texture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(boat_Horizontal_Texture, SDL_BLENDMODE_BLEND);
+
     // Load boat textures
     SDL_Surface *boat_Vertical_Surface = IMG_Load("assets/img/boat_v.png");
     if (!boat_Vertical_Surface)
@@ -112,6 +115,7 @@ void Game::loadGameTextures()
         cerr << "Failed to create small boat texture: " << SDL_GetError() << endl;
     }
 
+    // Load horizontal boat
     SDL_Surface *boat_Horizontal_Surface = IMG_Load("assets/img/boat_h.png");
     if (!boat_Horizontal_Surface)
     {
@@ -125,7 +129,22 @@ void Game::loadGameTextures()
     }
 
     buttonRect = {screenWidth - 60, 25, 60, 20};
-    cout << "gameLoaded";
+
+    // Load Win image
+    SDL_Surface *winSurface = IMG_Load("assets/img/Win_message.png");
+    if (!winSurface)
+    {
+        cerr << "Failed to load win image: " << IMG_GetError() << endl;
+    }
+
+    winTexture = SDL_CreateTextureFromSurface(renderer, winSurface);
+    SDL_FreeSurface(winSurface);
+    if (!winTexture)
+    {
+        cerr << "Failed to create  win texture: " << SDL_GetError() << endl;
+    }
+
+    winRect = {screenWidth / 2 - 182, screenHeight - 60, 364, 54};
 }
 
 void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
@@ -186,8 +205,7 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(boat_Vertical_Texture);
     SDL_DestroyTexture(boat_Horizontal_Texture);
     SDL_DestroyTexture(textureClick);
-
-    
+    SDL_DestroyTexture(winTexture);
 }
 
 void Game::drawCheckerboard()
@@ -213,6 +231,21 @@ void Game::displayBoat()
     for (const auto &boat : myBoat.boats)
     {
         drawBoat(boat.id, offsetX + boat.x * (squareSize + padding), offsetY + boat.y * (squareSize + padding), boat.length, boat.horizontal);
+        if (boat.id == 's' && boat.x == 6)
+        {
+            cout << "win";
+            myBoat.gameOver = true;
+            myBoat.gameAnimation = true;
+            if (myBoat.gameAnimation)
+            {
+                SDL_Delay(150);
+                myBoat.moveRight('s');
+                SDL_Delay(150);
+                myBoat.moveRight('s');
+            }
+
+            break;
+        }
     }
 }
 
@@ -320,15 +353,12 @@ int Game::checkAvailableTiles(BoatA::BoatInfo *boat, char direction)
             }
         }
     }
-
     return availableTiles;
 }
 
-
-
 void Game::displayClickHere()
 {
-      for (const auto &tile : availableTiles)
+    for (const auto &tile : availableTiles)
     {
         int tileX = offsetX + tile.first * (squareSize + padding);
         int tileY = offsetY + tile.second * (squareSize + padding);
@@ -336,9 +366,7 @@ void Game::displayClickHere()
         renderText("Click here", tileX, tileY);
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
     }
-  
 }
-
 
 void Game::renderText(const std::string &text, int x, int y)
 {
@@ -348,7 +376,7 @@ void Game::renderText(const std::string &text, int x, int y)
         cerr << "Failed to render text: " << TTF_GetError() << endl;
         return;
     }
-    
+
     textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
     SDL_FreeSurface(surfaceClick);
     if (!textureClick)
@@ -386,7 +414,7 @@ int Game::eventHandlerGame()
             buttonRect = {screenWidth - 60, 25, 60, 20};
         }
 
-        if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
+        if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT && !myBoat.gameOver)
         {
             // Handle "Click here" clicks
             if (showClickHere)

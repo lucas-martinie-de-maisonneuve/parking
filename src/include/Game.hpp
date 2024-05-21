@@ -15,7 +15,7 @@ public:
     void displayGame();
     int eventHandlerGame();
     void loadGameTextures();
-    void unloadGameTexture();    
+    void unloadGameTexture();
     void displayBoat();
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
@@ -24,7 +24,7 @@ public:
     bool gameLoaded = false;
     int x, y;
     std::vector<std::pair<int, int>> availableTiles;
-    BoatA::BoatInfo* selectedBoat; 
+    BoatA::BoatInfo *selectedBoat;
 
     // click Here
     void displayClickHere();
@@ -43,7 +43,8 @@ private:
     SDL_Rect buttonRect;
     SDL_Rect textRect;
     SDL_Rect rectBoat0;
-     SDL_Rect textClickRect;
+    SDL_Rect textClickRect;
+    SDL_Rect winRect;
 
     // Texture
     SDL_Texture *backgroundTexture;
@@ -51,19 +52,21 @@ private:
     SDL_Texture *textTexture;
     SDL_Texture *textureBoat0;
     SDL_Texture *boat_Vertical_Texture;
-    SDL_Texture *boat_Horizontal_Texture;    
+    SDL_Texture *boat_Horizontal_Texture;
     SDL_Texture *textureClick;
+    SDL_Texture *winTexture;
 
     void drawCheckerboard();
     const int ROWS = 8, COLS = 8;
     int squareSize = 50;
-    
+
     const int padding = 1;
 
     const int offsetX = (screenWidth - COLS * squareSize) / 2;
     const int offsetY = (screenHeight - ROWS * squareSize) / 2;
 
     BoatA::BoatInfo *getSelectedBoat(int mouseX, int mouseY);
+
 };
 
 #endif // GAME_HPP

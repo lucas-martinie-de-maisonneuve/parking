@@ -11,14 +11,14 @@ class BoatA
 public:
     struct BoatInfo
     {
-        char id; // 1 to 6
-        int x, y;
-        int length;      // 2 or 3
+        char id;         // 1 to 6
+        int x, y;        // Position
+        int length;      // 2 or 3 (or any other length for special boats)
         bool horizontal; // true = H, false = V
     };
 
     virtual ~BoatA() = default;
-    
+
     virtual void moveUp(char id) = 0;
     virtual void moveDown(char id) = 0;
     virtual void moveLeft(char id) = 0;
@@ -43,13 +43,10 @@ public:
 
     BoatA::BoatInfo *getBoatAtPosition(int x, int y);
 
-    std::vector<BoatA::BoatInfo> boats = {
-        {'1', 0, 0, 2, true},
-        {'2', 1, 2, 3, false},
-        {'3', 4, 4, 2, true},
-        {'4', 6, 1, 3, false},
-        {'5', 3, 5, 2, false},
-        {'6', 7, 4, 3, false}};
+    std::vector<BoatA::BoatInfo> boats;
+
+    bool gameOver = false;
+    bool gameAnimation = false;
 };
 
 #endif // BOAT_HPP
