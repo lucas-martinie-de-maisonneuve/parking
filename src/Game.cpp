@@ -8,7 +8,7 @@ Game::Game(SDL_Renderer *_renderer, int screenWidth, int screenHeight)
       font(nullptr), font2(nullptr), textTexture(nullptr), showClickHere(false)
 {
 
-    font = TTF_OpenFont("assets/fonts/Coffee.ttf", 10);
+    font = TTF_OpenFont("assets/fonts/Oswald-Medium.ttf", 10);
     if (!font)
     {
         cerr << "Failed to load font: " << TTF_GetError() << endl;
@@ -374,8 +374,8 @@ void Game::displayClickHere()
 {
     for (const auto &tile : availableTiles)
     {
-        int tileX = offsetX + tile.first * (squareSize + padding);
-        int tileY = offsetY + tile.second * (squareSize + padding);
+        int tileX = offsetX + tile.first * (squareSize + padding)+5;
+        int tileY = offsetY + tile.second * (squareSize + padding)+20;
 
         renderText(tileX, tileY);
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
