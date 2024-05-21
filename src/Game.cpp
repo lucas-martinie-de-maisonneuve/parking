@@ -144,7 +144,22 @@ void Game::loadGameTextures()
         cerr << "Failed to create  win texture: " << SDL_GetError() << endl;
     }
 
-    winRect = {screenWidth / 2 - 182, screenHeight - 60, 364, 54};
+    winRect = {screenWidth / 2 - 182, screenHeight - 120, 364, 54};
+
+    // Texture Click Here
+    SDL_Surface *surfaceClick = TTF_RenderText_Blended(font, "Click here", {0, 0, 0, 255}); // Rouge pour le texte
+    if (!surfaceClick)
+    {
+        cerr << "Failed to render text: " << TTF_GetError() << endl;
+        return;
+    }
+    textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
+    SDL_FreeSurface(surfaceClick);
+    if (!textureClick)
+    {
+        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
+        return;
+    }
 }
 
 void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
@@ -233,17 +248,16 @@ void Game::displayBoat()
         drawBoat(boat.id, offsetX + boat.x * (squareSize + padding), offsetY + boat.y * (squareSize + padding), boat.length, boat.horizontal);
         if (boat.id == 's' && boat.x == 6)
         {
-            cout << "win";
             myBoat.gameOver = true;
             myBoat.gameAnimation = true;
-            if (myBoat.gameAnimation)
-            {
-                SDL_Delay(150);
-                myBoat.moveRight('s');
-                SDL_Delay(150);
-                myBoat.moveRight('s');
-            }
-
+        }
+        if (myBoat.gameAnimation)
+        {
+            SDL_Delay(150);
+            myBoat.moveRight('s');
+            SDL_Delay(150);
+            myBoat.moveRight('s');
+            myBoat.gameAnimation = false;
             break;
         }
     }
@@ -363,31 +377,17 @@ void Game::displayClickHere()
         int tileX = offsetX + tile.first * (squareSize + padding);
         int tileY = offsetY + tile.second * (squareSize + padding);
 
-        renderText("Click here", tileX, tileY);
+        renderText(tileX, tileY);
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
     }
 }
 
-void Game::renderText(const std::string &text, int x, int y)
+void Game::renderText(int x, int y)
 {
-    SDL_Surface *surfaceClick = TTF_RenderText_Blended(font, text.c_str(), {255, 0, 0, 255}); // Rouge pour le texte
-    if (!surfaceClick)
-    {
-        cerr << "Failed to render text: " << TTF_GetError() << endl;
-        return;
-    }    
-    textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
-    SDL_FreeSurface(surfaceClick);
-    if (!textureClick)
-    {
-        cerr << "Failed to create text texture: " << SDL_GetError() << endl;
-        return;
-    }
     int textWidth, textHeight;
-    TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
+    TTF_SizeText(font, "Click here", &textWidth, &textHeight);
     textClickRect = {x, y, textWidth, textHeight};
 }
-
 
 int Game::eventHandlerGame()
 {
@@ -423,7 +423,7 @@ int Game::eventHandlerGame()
 
             // Handle boat selection
 
-            selectedBoat = getSelectedBoat(x, y);            
+            selectedBoat = getSelectedBoat(x, y);
             availableTiles.clear();
             if (selectedBoat)
             {
@@ -480,7 +480,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
             {
                 int boatX = selectedBoat->x;
                 int boatY = selectedBoat->y;
-           
+
                 if (selectedBoat->horizontal)
                 {
                     if (gridX < boatX)
@@ -491,7 +491,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatX--;
                         }
                     }
-                    else 
+                    else
                     {
                         while (boatX < gridX && boatX + 1 < 7)
                         {
@@ -510,7 +510,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatY--;
                         }
                     }
-                    else 
+                    else
                     {
                         while (boatY < gridY && boatY + 1 < 7)
                         {
@@ -518,7 +518,7 @@ void Game::handleClickHere(int mouseX, int mouseY)
                             boatY++;
                         }
                     }
-                }            
+                }
                 availableTiles.clear();
                 selectedBoat = nullptr;
                 showClickHere = false;

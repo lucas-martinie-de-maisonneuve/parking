@@ -20,7 +20,7 @@ public:
     void drawBoat(char id, int x, int y, int length, bool horizontal);
     Boat myBoat;
     int checkAvailableTiles(BoatA::BoatInfo *boat, char direction);
-    void renderText(const std::string &text, int x, int y);
+    void renderText(int x, int y);
     bool gameLoaded = false;
     int x, y;
     std::vector<std::pair<int, int>> availableTiles;
