@@ -97,7 +97,7 @@ void Game::loadGameTextures()
         cerr << "Failed to create button texture: " << SDL_GetError() << endl;
     }
 
-    buttonRect = {screenWidth - 60, 25, 60, 20};
+    buttonRect = {screenWidth - 70, 25, 60, 20};
 
     SDL_SetTextureBlendMode(boat_Vertical_Texture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(boat_Horizontal_Texture, SDL_BLENDMODE_BLEND);
@@ -128,7 +128,7 @@ void Game::loadGameTextures()
         cerr << "Failed to create large boat texture: " << SDL_GetError() << endl;
     }
 
-    buttonRect = {screenWidth - 60, 25, 60, 20};
+    buttonRect = {screenWidth - 80, 25, 60, 20};
 
     // Load Win image
     SDL_Surface *winSurface = IMG_Load("assets/img/Win_message.png");
@@ -402,7 +402,7 @@ int Game::eventHandlerGame()
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
             y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
         {
-            buttonRect = {screenWidth - 64, 24, 62, 22};
+            buttonRect = {screenWidth - 84, 24, 62, 22};
             if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT)
             {
                 return 10;
@@ -410,7 +410,7 @@ int Game::eventHandlerGame()
         }
         else
         {
-            buttonRect = {screenWidth - 60, 25, 60, 20};
+            buttonRect = {screenWidth - 80, 25, 60, 20};
         }
 
         if (eventGame.type == SDL_MOUSEBUTTONDOWN && eventGame.button.button == SDL_BUTTON_LEFT && !myBoat.gameOver)

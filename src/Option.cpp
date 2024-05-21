@@ -263,7 +263,7 @@ int Option::mousePositionOption()
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
             y >= buttonRect.y && y <= buttonRect.y + buttonRect.h)
         {
-            buttonRect = {screenWidth - 64, 24, 62, 22}; // Hover effect
+            buttonRect = {screenWidth - 84, 24, 62, 22}; // Hover effect
             if (eventOption.type == SDL_MOUSEBUTTONDOWN && eventOption.button.button == SDL_BUTTON_LEFT)
             {
                 return 10;
@@ -271,7 +271,7 @@ int Option::mousePositionOption()
         }
         else
         {
-            buttonRect = {screenWidth - 60, 25, 60, 20}; // Normal state
+            buttonRect = {screenWidth - 80, 25, 60, 20}; // Normal state
         }
     }
     return 20;
