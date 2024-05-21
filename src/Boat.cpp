@@ -9,10 +9,16 @@ Boat::Boat() : BoatRow(1), BoatCol(2)
         {'1', 0, 0, 2, true},
         {'2', 2, 3, 3, false},
         {'3', 4, 4, 2, true},
-        {'4', 6, 1, 3, false},
-        {'5', 4, 5, 2, false},
+        {'4', 6, 2, 3, false},
+        {'5', 3, 5, 2, false},
         {'6', 7, 4, 3, false},
-        {'s', 0, 3, 2, true}};
+        {'s', 0, 3, 2, true}, // Special boat
+        {'7', 4, 1, 3, false},
+        {'8', 5, 0, 3, true},
+        {'9', 4, 6, 3, true},
+        {'a', 0, 6, 2, false},
+        {'b', 3, 1, 3, false},
+        {'c', 5, 1, 3, true}};
 }
 Boat::~Boat()
 {

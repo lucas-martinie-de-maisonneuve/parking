@@ -106,14 +106,14 @@ void Menu::loadMenuOptions()
     SDL_FreeSurface(textSurface1);
 
     // Options
-    SDL_Surface *textSurface2 = TTF_RenderText_Blended(font1, "Options", {0, 0, 0, 255});
+    SDL_Surface *textSurface2 = TTF_RenderText_Blended(font1, "Rules", {0, 0, 0, 255});
     if (!textSurface2)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
     }
     textTexture2 = SDL_CreateTextureFromSurface(renderer, textSurface2);
     int textWidth2, textHeight2;
-    TTF_SizeText(font1, "Options", &textWidth2, &textHeight2);
+    TTF_SizeText(font1, "Rules", &textWidth2, &textHeight2);
     textRect2 = {menuItem2.x + menuItem2.w / 2 - textWidth2 / 2, menuItem2.y + menuItem2.h / 2 - textHeight2 / 2, textWidth2, textHeight2};
     SDL_FreeSurface(textSurface2);
 

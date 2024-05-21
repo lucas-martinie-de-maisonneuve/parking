@@ -38,7 +38,7 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-    
+
     drawCheckerboard();
     if (showClickHere && !myBoat.gameOver)
     {
@@ -183,6 +183,24 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         break;
     case '6':
         color = {128, 50, 100, 200}; // Purple
+        break;
+    case '7':
+        color = {0, 255, 255, 200}; // Cyan
+        break;
+    case '8':
+        color = {255, 0, 255, 200}; // Magenta
+        break;
+    case '9':
+        color = {255, 190, 0, 200}; 
+        break;
+    case 'a':
+        color = {255, 192, 203, 200}; // Pink
+        break;
+    case 'b':
+        color = {165, 42, 42, 200}; // Brown
+        break;
+    case 'c':
+        color = {0, 127, 255, 200}; // Brown
         break;
     default:
         color = {255, 255, 255, 200}; // White
