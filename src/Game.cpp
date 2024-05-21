@@ -375,8 +375,7 @@ void Game::renderText(const std::string &text, int x, int y)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
         return;
-    }
-
+    }    
     textureClick = SDL_CreateTextureFromSurface(renderer, surfaceClick);
     SDL_FreeSurface(surfaceClick);
     if (!textureClick)
@@ -384,11 +383,12 @@ void Game::renderText(const std::string &text, int x, int y)
         cerr << "Failed to create text texture: " << SDL_GetError() << endl;
         return;
     }
-
     int textWidth, textHeight;
     TTF_SizeText(font, text.c_str(), &textWidth, &textHeight);
     textClickRect = {x, y, textWidth, textHeight};
 }
+
+
 int Game::eventHandlerGame()
 {
     while (SDL_PollEvent(&eventGame))
@@ -397,7 +397,6 @@ int Game::eventHandlerGame()
         {
             return -1;
         }
-
         SDL_GetMouseState(&x, &y);
 
         if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w &&
@@ -423,7 +422,8 @@ int Game::eventHandlerGame()
             }
 
             // Handle boat selection
-            selectedBoat = getSelectedBoat(x, y);
+
+            selectedBoat = getSelectedBoat(x, y);            
             availableTiles.clear();
             if (selectedBoat)
             {
@@ -447,7 +447,6 @@ int Game::eventHandlerGame()
                 {
                     int availableUp = checkAvailableTiles(selectedBoat, 'U');
                     int availableDown = checkAvailableTiles(selectedBoat, 'D');
-
                     for (int i = 1; i <= availableUp; ++i)
                     {
                         availableTiles.push_back({selectedBoat->x, selectedBoat->y - i});
@@ -479,29 +478,47 @@ void Game::handleClickHere(int mouseX, int mouseY)
         {
             if (selectedBoat)
             {
+                int boatX = selectedBoat->x;
+                int boatY = selectedBoat->y;
+           
                 if (selectedBoat->horizontal)
                 {
-                    if (gridX < selectedBoat->x) // Move left
+                    if (gridX < boatX)
                     {
-                        myBoat.moveLeft(selectedBoat->id);
+                        while (boatX > gridX && boatX - 1 >= 0)
+                        {
+                            myBoat.moveLeft(selectedBoat->id);
+                            boatX--;
+                        }
                     }
-                    else // Move right
+                    else 
                     {
-                        myBoat.moveRight(selectedBoat->id);
+                        while (boatX < gridX && boatX + 1 < 7)
+                        {
+                            myBoat.moveRight(selectedBoat->id);
+                            boatX++;
+                        }
                     }
                 }
                 else
                 {
-                    if (gridY < selectedBoat->y) // Move up
+                    if (gridY < boatY)
                     {
-                        myBoat.moveUp(selectedBoat->id);
+                        while (boatY > gridY && boatY - 1 >= 0)
+                        {
+                            myBoat.moveUp(selectedBoat->id);
+                            boatY--;
+                        }
                     }
-                    else // Move down
+                    else 
                     {
-                        myBoat.moveDown(selectedBoat->id);
+                        while (boatY < gridY && boatY + 1 < 7)
+                        {
+                            myBoat.moveDown(selectedBoat->id);
+                            boatY++;
+                        }
                     }
-                }
-                // Update the available tiles after moving
+                }            
                 availableTiles.clear();
                 selectedBoat = nullptr;
                 showClickHere = false;

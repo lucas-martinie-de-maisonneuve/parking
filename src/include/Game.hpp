@@ -31,6 +31,7 @@ public:
     bool showClickHere;
     void handleClickHere(int mouseX, int mouseY);
 
+
 private:
     SDL_Event eventGame;
     SDL_Renderer *renderer;
