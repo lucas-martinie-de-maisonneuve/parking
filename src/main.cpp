@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
             if (!game.gameLoaded)
             {
                 game.loadGameTextures();
+                game.resetGame();
                 game.gameLoaded = true;
             }
             else if (menu.menuLoaded)

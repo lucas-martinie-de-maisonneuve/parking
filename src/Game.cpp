@@ -38,8 +38,7 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
     SDL_RenderCopy(renderer, textTexture, nullptr, &textRect);
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
-    SDL_RenderCopy(renderer, textureFinishLine , nullptr, & rectFinishLine );
-
+    SDL_RenderCopy(renderer, textureFinishLine, nullptr, &rectFinishLine);
 
     drawCheckerboard();
     if (showClickHere && !myBoat.gameOver)
@@ -100,8 +99,8 @@ void Game::loadGameTextures()
 
     buttonRect = {screenWidth - 70, 25, 60, 20};
 
-    SDL_SetTextureBlendMode(boat_Vertical_Texture, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureBlendMode(boat_Horizontal_Texture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(boatVerticalTexture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(boatHorizontalTexture, SDL_BLENDMODE_BLEND);
 
     // Load boat textures
     SDL_Surface *boat_Vertical_Surface = IMG_Load("assets/img/boat_v.png");
@@ -109,9 +108,9 @@ void Game::loadGameTextures()
     {
         cerr << "Failed to load small boat image: " << IMG_GetError() << endl;
     }
-    boat_Vertical_Texture = SDL_CreateTextureFromSurface(renderer, boat_Vertical_Surface);
+    boatVerticalTexture = SDL_CreateTextureFromSurface(renderer, boat_Vertical_Surface);
     SDL_FreeSurface(boat_Vertical_Surface);
-    if (!boat_Vertical_Texture)
+    if (!boatVerticalTexture)
     {
         cerr << "Failed to create small boat texture: " << SDL_GetError() << endl;
     }
@@ -122,9 +121,9 @@ void Game::loadGameTextures()
     {
         cerr << "Failed to load large boat image: " << IMG_GetError() << endl;
     }
-    boat_Horizontal_Texture = SDL_CreateTextureFromSurface(renderer, boat_Horizontal_Surface);
+    boatHorizontalTexture = SDL_CreateTextureFromSurface(renderer, boat_Horizontal_Surface);
     SDL_FreeSurface(boat_Horizontal_Surface);
-    if (!boat_Horizontal_Texture)
+    if (!boatHorizontalTexture)
     {
         cerr << "Failed to create large boat texture: " << SDL_GetError() << endl;
     }
@@ -164,21 +163,20 @@ void Game::loadGameTextures()
 
     // Load finish line
 
-    SDL_Surface* surfaceFinishLine = IMG_Load("assets/img/finishLine.png");
-    if (!surfaceFinishLine ) {
-        cerr << "Failed to load image: " << surfaceFinishLine  << ". Error: " << IMG_GetError() << endl;
+    SDL_Surface *surfaceFinishLine = IMG_Load("assets/img/finishLine.png");
+    if (!surfaceFinishLine)
+    {
+        cerr << "Failed to load image: " << surfaceFinishLine << ". Error: " << IMG_GetError() << endl;
     }
 
     // Create texture from surface
-    textureFinishLine  = SDL_CreateTextureFromSurface(renderer, surfaceFinishLine );
+    textureFinishLine = SDL_CreateTextureFromSurface(renderer, surfaceFinishLine);
     SDL_FreeSurface(surfaceFinishLine);
-    if (!textureFinishLine) {
+    if (!textureFinishLine)
+    {
         cerr << "Failed to create texture from image: " << textureFinishLine << ". Error: " << SDL_GetError() << endl;
-       
     }
-    rectFinishLine  = {505, 300, 40, 100};
-    
-    
+    rectFinishLine = {505, 300, 40, 100};
 }
 
 void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
@@ -211,7 +209,7 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         color = {255, 0, 255, 200}; // Magenta
         break;
     case '9':
-        color = {255, 70, 0, 200}; 
+        color = {255, 70, 0, 200};
         break;
     case 'a':
         color = {255, 192, 203, 200}; // Pink
@@ -227,7 +225,7 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         break;
     }
 
-    SDL_Texture *texture = horizontal ? boat_Horizontal_Texture : boat_Vertical_Texture;
+    SDL_Texture *texture = horizontal ? boatHorizontalTexture : boatVerticalTexture;
 
     SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
     SDL_SetTextureAlphaMod(texture, color.a);
@@ -254,8 +252,8 @@ void Game::unloadGameTexture()
     SDL_DestroyTexture(buttonTexture);
     SDL_DestroyTexture(textTexture);
     SDL_DestroyTexture(textureBoat0);
-    SDL_DestroyTexture(boat_Vertical_Texture);
-    SDL_DestroyTexture(boat_Horizontal_Texture);
+    SDL_DestroyTexture(boatVerticalTexture);
+    SDL_DestroyTexture(boatHorizontalTexture);
     SDL_DestroyTexture(textureClick);
     SDL_DestroyTexture(winTexture);
     SDL_DestroyTexture(textureFinishLine);
@@ -412,8 +410,8 @@ void Game::displayClickHere()
 {
     for (const auto &tile : availableTiles)
     {
-        int tileX = offsetX + tile.first * (squareSize + padding)+5;
-        int tileY = offsetY + tile.second * (squareSize + padding)+20;
+        int tileX = offsetX + tile.first * (squareSize + padding) + 5;
+        int tileY = offsetY + tile.second * (squareSize + padding) + 20;
 
         renderText(tileX, tileY);
         SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
@@ -564,4 +562,25 @@ void Game::handleClickHere(int mouseX, int mouseY)
             break;
         }
     }
+}
+
+void Game::resetGame()
+{
+    myBoat.boats = {
+        {'1', 0, 0, 2, true},
+        {'2', 2, 3, 3, false},
+        {'3', 4, 4, 2, true},
+        {'4', 6, 2, 3, false},
+        {'5', 3, 5, 2, false},
+        {'6', 7, 4, 3, false},
+        {'s', 0, 3, 2, true}, // Special boat
+        {'7', 4, 1, 3, false},
+        {'8', 5, 0, 3, true},
+        {'9', 4, 6, 3, true},
+        {'a', 0, 6, 2, false},
+        {'b', 3, 1, 3, false},
+        {'c', 5, 1, 3, true}};
+
+    myBoat.gameOver = false;
+    showClickHere = false;
 }

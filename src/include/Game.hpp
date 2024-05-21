@@ -31,6 +31,7 @@ public:
     bool showClickHere;
     void handleClickHere(int mouseX, int mouseY);
 
+    void resetGame();
 
 private:
     SDL_Event eventGame;
@@ -53,8 +54,8 @@ private:
     SDL_Texture *buttonTexture;
     SDL_Texture *textTexture;
     SDL_Texture *textureBoat0;
-    SDL_Texture *boat_Vertical_Texture;
-    SDL_Texture *boat_Horizontal_Texture;
+    SDL_Texture *boatVerticalTexture;
+    SDL_Texture *boatHorizontalTexture;
     SDL_Texture *textureClick;
     SDL_Texture *winTexture;
     SDL_Texture* textureFinishLine;

@@ -213,3 +213,4 @@ bool Boat::isPositionOccupied(int x, int y, char id) const
     }
     return false;
 }
+
