@@ -211,7 +211,7 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         color = {255, 0, 255, 200}; // Magenta
         break;
     case '9':
-        color = {255, 190, 0, 200}; 
+        color = {255, 70, 0, 200}; 
         break;
     case 'a':
         color = {255, 192, 203, 200}; // Pink
