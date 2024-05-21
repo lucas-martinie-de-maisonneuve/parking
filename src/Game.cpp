@@ -55,7 +55,7 @@ void Game::displayGame()
 
 void Game::loadGameTextures()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Boat parking", {255, 255, 255, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Parking Boat", {255, 255, 255, 255});
     if (!textSurface)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
@@ -69,7 +69,7 @@ void Game::loadGameTextures()
     }
 
     int textWidth, textHeight;
-    TTF_SizeText(font2, "Boat parking", &textWidth, &textHeight);
+    TTF_SizeText(font2, "Parking Boat", &textWidth, &textHeight);
     textRect = {screenWidth / 2 - textWidth / 2, 40, textWidth, textHeight};
 
     SDL_Surface *backgroundSurface = IMG_Load("assets/img/BackgrounGame.png");
@@ -223,7 +223,7 @@ void Game::drawBoat(char id, int x, int y, int length, bool horizontal)
         color = {0, 127, 255, 200}; // Brown
         break;
     default:
-        color = {255, 255, 255, 200}; // White
+        color = {255, 255, 255, 255}; // White
         break;
     }
 

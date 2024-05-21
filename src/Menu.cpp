@@ -69,7 +69,7 @@ void Menu::runMenu()
 
 void Menu::loadTitle()
 {
-    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Boat Parking", {255, 255, 255, 255});
+    SDL_Surface *textSurface = TTF_RenderText_Blended(font2, "Parking Boat", {255, 255, 255, 255});
     if (!textSurface)
     {
         cerr << "Failed to render text: " << TTF_GetError() << endl;
@@ -83,7 +83,7 @@ void Menu::loadTitle()
     }
 
     int textWidth, textHeight;
-    TTF_SizeText(font2, "Boat Parking", &textWidth, &textHeight);
+    TTF_SizeText(font2, "Parking Boat", &textWidth, &textHeight);
     rectTextTitle = {screenWidth / 2 - textWidth / 2, 25, textWidth, textHeight};
 }
 
