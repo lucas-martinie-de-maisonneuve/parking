@@ -40,18 +40,16 @@ void Game::displayGame()
     SDL_RenderCopy(renderer, buttonTexture, nullptr, &buttonRect);
     SDL_RenderCopy(renderer, textureFinishLine , nullptr, & rectFinishLine );
 
-    if (showClickHere)
+    if (showClickHere && !myBoat.gameOver)
     {
-        SDL_RenderCopy(renderer, textureClick, nullptr, &textClickRect);
+        displayClickHere();
     }
-
-    drawCheckerboard();
-    displayBoat();
 
     if (myBoat.gameOver)
         SDL_RenderCopy(renderer, winTexture, nullptr, &winRect);
-    else
-        displayClickHere();
+
+    drawCheckerboard();
+    displayBoat();
 }
 
 void Game::loadGameTextures()
